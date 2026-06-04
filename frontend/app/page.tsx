@@ -1,153 +1,247 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import Sidebar from "@/components/Sidebar";
+import React, { useEffect, useState, useMemo } from "react";
+import { transactionApi, aiApi } from "@/lib/api";
+import { Transaction, TransactionSummary, ForecastDataPoint, FinancialProfile } from "@/lib/types";
+import DashboardCharts from "@/components/DashboardCharts";
 import SummaryCards from "@/components/SummaryCards";
-import TransactionForm from "@/components/TransactionForm";
 import TransactionList from "@/components/TransactionList";
-import { transactionApi } from "@/lib/api";
-import { Transaction, TransactionSummary } from "@/lib/types";
+import AnimatedBackground from "@/components/AnimatedBackground";
+import Sidebar from "@/components/Sidebar";
+import { motion, AnimatePresence } from "framer-motion";
+import { TrendingUp, Psychology, Notifications, Settings, ChevronRight } from "@mui/icons-material";
+import Link from "next/link";
 
-const DEFAULT_SUMMARY: TransactionSummary = { totalIncome: 0, totalExpense: 0, balance: 0 };
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.05 },
+  },
+};
 
-export default function DashboardPage() {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [summary, setSummary] = useState<TransactionSummary>(DEFAULT_SUMMARY);
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { type: "spring", stiffness: 140, damping: 20 },
+  },
+};
+
+export default function Home() {
+  const [allTransactions, setAllTransactions] = useState<Transaction[]>([]);
+  const [globalSummary, setGlobalSummary] = useState<TransactionSummary>({
+    totalIncome: 0,
+    totalExpense: 0,
+    balance: 0,
+  });
+  const [forecast, setForecast] = useState<ForecastDataPoint[]>([]);
+  const [profile, setProfile] = useState<FinancialProfile | null>(null);
+  const [timeFilter, setTimeFilter] = useState<'Hari Ini' | 'Minggu' | 'Bulan' | 'Tahun'>('Bulan');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+  const fetchData = async () => {
     try {
-      const res = await transactionApi.getAll({ limit: 10 });
-      setTransactions(res.data);
-      if (res.summary) setSummary(res.summary);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to load data.");
+      const [txData, summaryData, fData, pData] = await Promise.all([
+        transactionApi.getAll(),
+        transactionApi.getSummary(),
+        aiApi.getForecast(),
+        aiApi.getFinancialProfile()
+      ]);
+      
+      setAllTransactions(txData);
+      setGlobalSummary(summaryData);
+      setForecast(fData);
+      setProfile(pData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
-  useEffect(() => { fetchData(); }, [fetchData]);
+  // FilterList logic
+  const filteredTransactions = useMemo(() => {
+    const now = new Date();
+    return allTransactions.filter(tx => {
+      const txDate = new Date(tx.date);
+      const diffTime = Math.abs(now.getTime() - txDate.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (timeFilter === 'Hari Ini') return diffDays <= 1;
+      if (timeFilter === 'Minggu') return diffDays <= 7;
+      if (timeFilter === 'Bulan') return diffDays <= 30;
+      if (timeFilter === 'Tahun') return diffDays <= 365;
+      return true;
+    });
+  }, [allTransactions, timeFilter]);
+
+  const filteredSummary = useMemo(() => {
+    const income = filteredTransactions.filter(t => t.type === 'income').reduce((acc, t) => acc + t.amount, 0);
+    const expense = filteredTransactions.filter(t => t.type === 'expense').reduce((acc, t) => acc + t.amount, 0);
+    return {
+      totalIncome: income,
+      totalExpense: expense,
+      balance: income - expense
+    };
+  }, [filteredTransactions]);
 
   return (
-    <div className="relative min-h-screen">
-      <Sidebar activeHref="/" />
-
-      {/* Main canvas */}
-      <main className="md:ml-64 min-h-screen flex flex-col p-4 md:p-8 pt-8">
-        
-        {/* ── Top Bar ── */}
-        <header className="flex justify-between items-center mb-8">
-          <div>
-            <div className="flex items-center text-[#A0AEC0] text-xs gap-1 mb-1 font-medium">
-               <span className="material-symbols-outlined text-[14px]">home</span>
-               <span>/ Dashboard</span>
-            </div>
-            <h2 className="font-bold text-white text-lg tracking-tight">Dashboard</h2>
-          </div>
+    <div className="flex h-screen bg-[#09090b] overflow-hidden font-sans text-gray-200">
+      <AnimatedBackground />
+      <Sidebar />
+      
+      <main className="flex-1 flex flex-col h-full overflow-hidden relative z-10 p-6 lg:p-10 ml-0 md:ml-64 transition-all duration-300">
+        {/* Top Header Navigation */}
+        <header className="flex justify-between items-center mb-10">
+          <motion.div 
+            initial={{ x: -20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            className="flex items-center space-x-8"
+          >
+            <h1 className="text-2xl font-bold text-white tracking-tight">Ringkasan Keuangan</h1>
+            <nav className="hidden lg:flex p-1 bg-zinc-900/50 rounded-xl border border-white/5 relative">
+              {(['Hari Ini', 'Minggu', 'Bulan', 'Tahun'] as const).map((tab) => (
+                <button 
+                  key={tab} 
+                  onClick={() => setTimeFilter(tab)}
+                  className={`relative px-5 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
+                    timeFilter === tab 
+                      ? 'text-white' 
+                      : 'text-zinc-500 hover:text-white'
+                  }`}
+                >
+                  {timeFilter === tab && (
+                    <motion.div
+                      layoutId="dashTab"
+                      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                      className="absolute inset-0 bg-brand-blue rounded-lg shadow-lg shadow-blue-500/20"
+                    />
+                  )}
+                  <span className="relative z-10">{tab}</span>
+                </button>
+              ))}
+            </nav>
+          </motion.div>
           
-          <div className="flex items-center gap-4">
-             <div className="relative hidden md:block">
-                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-white/50 text-sm">search</span>
-                <input type="text" placeholder="Type here..." className="bg-[#0F1535] border border-[rgba(255,255,255,0.1)] rounded-[15px] py-2 pl-9 pr-4 text-xs text-white placeholder-white/50 w-48 focus:outline-none focus:border-[#0075FF]" />
-             </div>
-             <div className="flex items-center gap-2 text-white font-bold text-xs cursor-pointer">
-                <span className="material-symbols-outlined">account_circle</span>
-                <span className="hidden sm:inline">Sign In</span>
-             </div>
-             <span className="material-symbols-outlined text-[#A0AEC0] cursor-pointer">settings</span>
-             <span className="material-symbols-outlined text-[#A0AEC0] cursor-pointer">notifications</span>
-          </div>
+          <motion.div 
+            initial={{ x: 20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            className="flex items-center space-x-4"
+          >
+            <div className="flex space-x-2">
+              <button className="p-2.5 rounded-xl bg-zinc-900/50 border border-white/5 text-zinc-400 hover:text-white hover:bg-zinc-800/80 transition-all">
+                <Notifications style={{ fontSize: 20 }} />
+              </button>
+              <button className="p-2.5 rounded-xl bg-zinc-900/50 border border-white/5 text-zinc-400 hover:text-white hover:bg-zinc-800/80 transition-all">
+                <Settings style={{ fontSize: 20 }} />
+              </button>
+            </div>
+            <div className="h-10 w-[1px] bg-white/10 mx-2" />
+            <div className="flex items-center space-x-3 pl-2">
+              <div className="text-right hidden sm:block">
+                <p className="text-sm font-semibold text-white leading-none">Pengguna Artha</p>
+                <p className="text-[10px] text-brand-cyan uppercase tracking-widest font-bold mt-1">Premium</p>
+              </div>
+              <img src="https://ui-avatars.com/api/?name=Artha+Wise&background=2563eb&color=fff" alt="Avatar" className="w-10 h-10 rounded-xl ring-2 ring-brand-blue/20" />
+            </div>
+          </motion.div>
         </header>
+        
+        <div className="flex-1 overflow-y-auto pr-2 pb-24 md:pb-10 customized-scrollbar">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="space-y-8"
+          >
+            {/* KPI Cards */}
+            <motion.div variants={itemVariants}>
+              <SummaryCards summary={filteredSummary} transactions={filteredTransactions} />
+            </motion.div>
 
-        {/* ── Error Banner ── */}
-        {error && (
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-[rgba(227,26,26,0.3)] bg-[rgba(227,26,26,0.1)] text-[#E31A1A] text-sm mb-8">
-            <span className="material-symbols-outlined text-lg">warning</span>
-            <span>{error}</span>
-            <button onClick={fetchData} className="ml-auto underline opacity-80 hover:opacity-100 text-xs font-bold">
-              Retry Connection
-            </button>
-          </div>
-        )}
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+              {/* Main Charts */}
+              <motion.div variants={itemVariants} className="xl:col-span-2 space-y-8">
+                <DashboardCharts transactions={filteredTransactions} summary={filteredSummary} />
+                <TransactionList transactions={filteredTransactions} onTransactionDeleted={fetchData} />
+              </motion.div>
 
-        <div className="flex flex-col gap-6 max-w-[1400px] w-full mx-auto">
-           {/* ── Top Stats Row ── */}
-           <SummaryCards summary={summary} loading={loading} />
-
-           {/* ── Welcome & Form Row ── */}
-           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              {/* Welcome Banner */}
-              <div className="lg:col-span-8 vui-card p-8 flex flex-col justify-between relative overflow-hidden min-h-[250px]">
-                 <div className="z-10 flex flex-col h-full">
-                    <p className="text-[#A0AEC0] text-sm font-bold mb-1">Welcome back,</p>
-                    <h2 className="text-white text-3xl font-bold mb-4">Mark Johnson</h2>
-                    <p className="text-[#A0AEC0] text-sm max-w-xs mb-8">
-                       Glad to see you again!<br/>
-                       Ask me anything.
-                    </p>
-                    <div className="mt-auto flex items-center gap-2 text-white text-sm font-bold cursor-pointer group w-fit">
-                       Tap to record
-                       <span className="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+              {/* Sidebar AI Insights */}
+              <motion.div variants={itemVariants} className="space-y-8">
+                {/* AI Profile Card */}
+                <div className="vui-card p-6 border-l-4 border-l-brand-purple">
+                  <div className="flex justify-between items-start mb-6">
+                    <div className="p-3 rounded-2xl bg-brand-purple/10 text-brand-purple border border-brand-purple/20">
+                      <Psychology style={{ fontSize: 24 }} />
                     </div>
-                 </div>
-                 {/* Decorative background element simulating the jellyfish graphic */}
-                 <div className="absolute right-[-10%] top-[-10%] w-2/3 h-full opacity-60 pointer-events-none rounded-full blur-[60px]" style={{ background: "radial-gradient(circle, #0075FF 0%, transparent 70%)" }}></div>
-              </div>
+                    <span className="text-[10px] font-bold text-brand-purple uppercase tracking-tighter px-2 py-1 bg-brand-purple/5 rounded-md">AI Profile</span>
+                  </div>
+                  <h3 className="text-sm font-medium text-zinc-400 mb-1">Karakter Finansial</h3>
+                  <div className="text-xl font-bold text-white mb-4">{profile?.cluster || "Menganalisis..."}</div>
+                  <p className="text-sm text-zinc-400 leading-relaxed mb-6">
+                    {profile?.description || "AI kami sedang menganalisis pola pengeluaran Anda untuk mengkategorikan perilaku finansial Anda."}
+                  </p>
+                  <Link href="/analytics" className="w-full py-3 bg-zinc-900/50 hover:bg-zinc-800 rounded-xl border border-white/5 text-sm font-medium transition-all flex items-center justify-center gap-2 group">
+                    Lihat Detail
+                    <ChevronRight style={{ fontSize: 16 }} className="group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </div>
 
-              {/* Form */}
-              <div className="lg:col-span-4">
-                 <TransactionForm onSuccess={fetchData} />
-              </div>
-           </div>
-
-           {/* ── Bottom Row ── */}
-           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-12">
-              <div className="lg:col-span-8">
-                 {/* Placeholder for Projects table - using a simple card for now to match layout */}
-                 <div className="vui-card p-6 h-full min-h-[300px]">
-                    <div className="flex flex-col mb-6">
-                       <h3 className="text-lg font-bold text-white mb-1">Projects</h3>
-                       <p className="text-sm font-bold text-[#01B574]">
-                          <span className="material-symbols-outlined text-sm align-middle mr-1">check_circle</span>
-                          30 done <span className="text-[#A0AEC0] font-normal">this month</span>
-                       </p>
+                {/* Forecast Sparkline Card */}
+                <div className="vui-card p-6 border-l-4 border-l-brand-cyan">
+                  <div className="flex justify-between items-start mb-6">
+                    <div className="p-3 rounded-2xl bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/20">
+                      <TrendingUp style={{ fontSize: 24 }} />
                     </div>
-                    
-                    <div className="w-full overflow-x-auto">
-                       <table className="w-full text-left border-collapse">
-                          <thead>
-                             <tr>
-                                <th className="pb-3 text-[10px] font-bold text-[#A0AEC0] uppercase tracking-wider border-b border-[rgba(255,255,255,0.1)]">Companies</th>
-                                <th className="pb-3 text-[10px] font-bold text-[#A0AEC0] uppercase tracking-wider border-b border-[rgba(255,255,255,0.1)]">Members</th>
-                                <th className="pb-3 text-[10px] font-bold text-[#A0AEC0] uppercase tracking-wider border-b border-[rgba(255,255,255,0.1)]">Budget</th>
-                                <th className="pb-3 text-[10px] font-bold text-[#A0AEC0] uppercase tracking-wider border-b border-[rgba(255,255,255,0.1)]">Completion</th>
-                             </tr>
-                          </thead>
-                          <tbody>
-                             <tr>
-                                <td className="py-4 border-b border-[rgba(255,255,255,0.05)] text-sm font-bold text-white">Chakra Vision UI Version</td>
-                                <td className="py-4 border-b border-[rgba(255,255,255,0.05)]">...</td>
-                                <td className="py-4 border-b border-[rgba(255,255,255,0.05)] text-sm font-bold text-white">$14,000</td>
-                                <td className="py-4 border-b border-[rgba(255,255,255,0.05)]">
-                                   <div className="flex items-center gap-2">
-                                      <span className="text-xs font-bold text-white">60%</span>
-                                      <div className="progress-bar w-24"><div className="progress-bar-fill bg-[#0075FF] w-[60%]"></div></div>
-                                   </div>
-                                </td>
-                             </tr>
-                          </tbody>
-                       </table>
-                    </div>
-                 </div>
-              </div>
-              <div className="lg:col-span-4">
-                 <TransactionList transactions={transactions} onDelete={fetchData} loading={loading} />
-              </div>
-           </div>
+                    <span className="text-[10px] font-bold text-brand-cyan uppercase tracking-tighter px-2 py-1 bg-brand-cyan/5 rounded-md">LSTM Forecast</span>
+                  </div>
+                  <h3 className="text-sm font-medium text-zinc-400 mb-1">Estimasi 7 Hari ke Depan</h3>
+                  <div className="text-xl font-bold text-white mb-6">
+                    {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(forecast.reduce((acc, f) => acc + f.predicted_expense, 0))}
+                  </div>
+                  
+                  {/* Sparkline bars */}
+                  {(() => {
+                    const maxVal = forecast.length > 0 ? Math.max(...forecast.map(f => f.predicted_expense)) : 1;
+                    return (
+                      <div className="flex items-end justify-between gap-1.5 h-16">
+                        {forecast.length > 0 ? forecast.map((f, i) => {
+                          const heightPct = maxVal > 0 ? (f.predicted_expense / maxVal) * 100 : 10;
+                          return (
+                            <motion.div
+                              key={i}
+                              title={new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(f.predicted_expense)}
+                              initial={{ height: 0 }}
+                              animate={{ height: `${Math.max(heightPct, 8)}%` }}
+                              transition={{ type: 'spring', stiffness: 100, damping: 18, delay: 0.3 + i * 0.07 }}
+                              className="flex-1 bg-brand-cyan/30 rounded-t-sm relative group cursor-pointer"
+                            >
+                              <div className="absolute inset-0 bg-brand-cyan opacity-0 group-hover:opacity-100 transition-opacity rounded-t-sm shadow-[0_0_10px_rgba(6,182,212,0.5)]" />
+                            </motion.div>
+                          );
+                        }) : (
+                          // Placeholder skeleton saat data belum ada
+                          Array.from({ length: 7 }).map((_, i) => (
+                            <div key={i} className="flex-1 bg-zinc-800/50 rounded-t-sm animate-pulse" style={{ height: `${20 + Math.random() * 60}%` }} />
+                          ))
+                        )}
+                      </div>
+                    );
+                  })()}
+                  <div className="flex justify-between mt-2">
+                    <span className="text-[10px] text-zinc-600 font-bold uppercase">Hari Ini</span>
+                    <span className="text-[10px] text-zinc-600 font-bold uppercase">Pekan Depan</span>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
         </div>
       </main>
     </div>

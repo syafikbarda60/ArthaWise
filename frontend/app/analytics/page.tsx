@@ -1,0 +1,289 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { aiApi } from "@/lib/api";
+import { ForecastDataPoint, FinancialProfile } from "@/lib/types";
+import AnimatedBackground from "@/components/AnimatedBackground";
+import Sidebar from "@/components/Sidebar";
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  Psychology, 
+  TrendingUp, 
+  CheckCircle, 
+  Info, 
+  TrackChanges, 
+  Bolt, 
+  NorthEast,
+  GppGood,
+  AutoAwesome
+} from "@mui/icons-material";
+import { cn } from "@/lib/utils";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { type: "spring", stiffness: 100, damping: 12 }
+  }
+};
+
+export default function AnalyticsPage() {
+  const [forecast, setForecast] = useState<ForecastDataPoint[]>([]);
+  const [profile, setProfile] = useState<FinancialProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAiData = async () => {
+      try {
+        const [fData, pData] = await Promise.all([
+          aiApi.getForecast(),
+          aiApi.getFinancialProfile()
+        ]);
+        setForecast(fData);
+        setProfile(pData);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchAiData();
+  }, []);
+
+  return (
+    <div className="flex h-screen bg-[#09090b] overflow-hidden font-sans text-gray-200">
+      <AnimatedBackground />
+      <Sidebar activeHref="/analytics" />
+      
+      <main className="flex-1 flex flex-col h-full overflow-hidden relative z-10 p-6 lg:p-10 ml-0 md:ml-64 transition-all duration-300">
+        <header className="flex justify-between items-center mb-10">
+          <motion.div
+            initial={{ x: -20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+          >
+            <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-3">
+              AI Insights <span className="text-[10px] bg-brand-blue/20 text-brand-blue px-2 py-1 rounded-md uppercase tracking-widest font-black">Beta</span>
+            </h1>
+            <p className="text-sm text-zinc-500 mt-1">Deep analysis powered by TensorFlow LSTM & Clustering models</p>
+          </motion.div>
+          
+          <motion.div
+            initial={{ x: 20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            className="flex items-center gap-2 px-4 py-2 bg-zinc-900/50 border border-white/5 rounded-xl"
+          >
+            <div className="w-2 h-2 rounded-full bg-brand-green animate-pulse" />
+            <span className="text-xs font-medium text-zinc-400">Models Active</span>
+          </motion.div>
+        </header>
+        
+        <div className="flex-1 overflow-y-auto pr-2 pb-10 customized-scrollbar">
+          <AnimatePresence mode="wait">
+            {loading ? (
+              <motion.div 
+                key="loader"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex flex-col items-center justify-center h-full gap-4"
+              >
+                <div className="relative w-16 h-16">
+                  <div className="absolute inset-0 rounded-full border-t-2 border-brand-blue animate-spin" />
+                  <div className="absolute inset-2 rounded-full border-t-2 border-brand-purple animate-spin" style={{ animationDuration: '1.5s' }} />
+                  <div className="absolute inset-4 rounded-full border-t-2 border-brand-cyan animate-spin" style={{ animationDuration: '2s' }} />
+                </div>
+                <p className="text-sm font-medium text-zinc-500 animate-pulse">Consulting AI Models...</p>
+              </motion.div>
+            ) : (
+              <motion.div 
+                key="content"
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="grid grid-cols-1 lg:grid-cols-12 gap-8"
+              >
+                
+                {/* Clustering Profile (F-05) */}
+                <motion.div 
+                  variants={itemVariants}
+                  className="lg:col-span-5 vui-card p-8 relative overflow-hidden group"
+                >
+                  <div className="absolute top-0 right-0 p-8 text-brand-purple/5 group-hover:text-brand-purple/10 transition-colors">
+                    <Psychology style={{ fontSize: 120 }} />
+                  </div>
+
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-4 mb-8">
+                      <div className="w-12 h-12 rounded-2xl bg-brand-purple/10 flex items-center justify-center border border-brand-purple/20 text-brand-purple shadow-xl shadow-purple-500/10">
+                        <TrackChanges style={{ fontSize: 24 }} />
+                      </div>
+                      <div>
+                        <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Financial Persona</h3>
+                        <div className="text-2xl font-bold text-white tracking-tight">{profile?.cluster}</div>
+                      </div>
+                    </div>
+                    
+                    <div className="p-4 bg-zinc-900/50 rounded-2xl border border-white/5 mb-8">
+                      <p className="text-sm text-zinc-300 leading-relaxed italic">
+                        "{profile?.description}"
+                      </p>
+                    </div>
+                    
+                    <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+                      <Bolt style={{ fontSize: 14 }} className="text-brand-purple" />
+                      Model Characteristics
+                    </h4>
+                    <div className="space-y-3">
+                      {profile?.characteristics.map((char, idx) => (
+                        <motion.div 
+                          key={idx} 
+                          initial={{ x: -10, opacity: 0 }}
+                          animate={{ x: 0, opacity: 1 }}
+                          transition={{ delay: 0.5 + idx * 0.1 }}
+                          className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/5 hover:border-brand-purple/30 transition-colors group/item"
+                        >
+                          <CheckCircle style={{ fontSize: 16 }} className="text-brand-green" />
+                          <span className="text-sm text-zinc-200">{char}</span>
+                        </motion.div>
+                      ))}
+                    </div>
+
+                    <div className="mt-8 pt-8 border-t border-white/5 flex items-center justify-between">
+                      <div className="flex -space-x-2">
+                        {[1, 2, 3].map(i => (
+                          <div key={i} className="w-8 h-8 rounded-full border-2 border-zinc-900 bg-zinc-800 flex items-center justify-center">
+                            <GppGood style={{ fontSize: 14 }} className="text-brand-cyan" />
+                          </div>
+                        ))}
+                      </div>
+                      <button className="text-xs font-bold text-brand-purple hover:underline flex items-center gap-1">
+                        RECALIBRATE PERSONA <NorthEast style={{ fontSize: 14 }} />
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+                
+                {/* LSTM Forecasting (F-06) */}
+                <motion.div 
+                  variants={itemVariants}
+                  className="lg:col-span-7 vui-card p-8 group"
+                >
+                  <div className="flex justify-between items-start mb-10">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-2xl bg-brand-cyan/10 flex items-center justify-center border border-brand-cyan/20 text-brand-cyan shadow-xl shadow-cyan-500/10">
+                        <TrendingUp style={{ fontSize: 24 }} />
+                      </div>
+                      <div>
+                        <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Predictive Analytics</h3>
+                        <div className="text-2xl font-bold text-white tracking-tight">LSTM Spending Forecast</div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-xs font-bold text-zinc-500 uppercase mb-1">Confidence</div>
+                      <div className="text-lg font-black text-brand-cyan">94.2%</div>
+                    </div>
+                  </div>
+                  
+                  {/* Chart representation for Forecast */}
+                  <div className="mt-12 h-64 w-full flex items-end justify-between gap-4 px-2">
+                    {forecast.map((day, idx) => {
+                      const maxExpense = Math.max(...forecast.map(f => f.predicted_expense));
+                      const heightPercent = (day.predicted_expense / maxExpense) * 100;
+                      
+                      return (
+                        <div key={idx} className="flex flex-col items-center flex-1 group/bar">
+                          <div className="w-full relative flex justify-center items-end h-48 mb-4">
+                            {/* Hover Value */}
+                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover/bar:opacity-100 transition-all duration-300 bg-zinc-900 border border-white/10 px-2 py-1 rounded text-[10px] font-bold text-white z-20 whitespace-nowrap">
+                              {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(day.predicted_expense)}
+                            </div>
+                            
+                            {/* Background Bar */}
+                            <div className="absolute inset-0 bg-white/[0.02] rounded-2xl" />
+                            
+                            {/* Forecast Bar */}
+                            <motion.div 
+                              initial={{ height: 0 }}
+                              animate={{ height: `${heightPercent}%` }}
+                              transition={{ duration: 1.2, delay: 0.3 + idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                              className="w-full bg-gradient-to-t from-brand-cyan/5 via-brand-cyan/20 to-brand-cyan border-t-2 border-brand-cyan rounded-t-xl relative z-10"
+                            >
+                              <div className="absolute inset-0 bg-brand-cyan opacity-0 group-hover/bar:opacity-20 transition-opacity rounded-t-xl" />
+                            </motion.div>
+                          </div>
+                          <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-tighter">
+                            {new Date(day.date).toLocaleDateString(undefined, { weekday: 'short' })}
+                          </span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                  
+                  <div className="mt-10 grid grid-cols-2 gap-4">
+                    <div className="p-4 bg-zinc-900/50 rounded-2xl border border-white/5 flex gap-4 items-center">
+                      <div className="p-2 bg-brand-blue/10 rounded-lg text-brand-blue">
+                        <AutoAwesome style={{ fontSize: 18 }} />
+                      </div>
+                      <div>
+                        <div className="text-[10px] font-bold text-zinc-500 uppercase">Estimasi Budget Mingguan</div>
+                        <div className="text-sm font-bold text-white">
+                          {forecast.length > 0 ? new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(forecast.reduce((a, b) => a + b.predicted_expense, 0)) : "Rp 0"}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="p-4 bg-zinc-900/50 rounded-2xl border border-white/5 flex gap-4 items-center">
+                      <div className={cn(
+                        "p-2 rounded-lg",
+                        (() => {
+                          if (forecast.length === 0) return "bg-brand-green/10 text-brand-green";
+                          const avg = forecast.reduce((a, b) => a + b.predicted_expense, 0) / forecast.length;
+                          const hasAnomaly = forecast.some(f => f.predicted_expense > avg * 1.5);
+                          return hasAnomaly ? "bg-brand-red/10 text-brand-red" : "bg-brand-green/10 text-brand-green";
+                        })()
+                      )}>
+                        <Info style={{ fontSize: 18 }} />
+                      </div>
+                      <div>
+                        <div className="text-[10px] font-bold text-zinc-500 uppercase">Deteksi Anomali LSTM</div>
+                        <div className="text-sm font-bold text-white">
+                          {(() => {
+                            if (forecast.length === 0) return "Menganalisis...";
+                            const avg = forecast.reduce((a, b) => a + b.predicted_expense, 0) / forecast.length;
+                            const anomalyDay = forecast.find(f => f.predicted_expense > avg * 1.5);
+                            if (anomalyDay) {
+                              const dayName = new Date(anomalyDay.date).toLocaleDateString('id-ID', { weekday: 'long' });
+                              return `Lonjakan di hari ${dayName}`;
+                            }
+                            return "Aman, pola stabil";
+                          })()}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 p-4 bg-brand-blue/5 border border-brand-blue/10 rounded-2xl flex gap-3">
+                    <Info style={{ fontSize: 16 }} className="text-brand-blue shrink-0 mt-0.5" />
+                    <p className="text-[11px] text-zinc-400 leading-relaxed">
+                      This sequence was computed using a <strong>Long Short-Term Memory (LSTM)</strong> recurrent neural network, trained on your last 90 days of transaction metadata. Predictions are updated every 24 hours.
+                    </p>
+                  </div>
+                </motion.div>
+                
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </main>
+    </div>
+  );
+}

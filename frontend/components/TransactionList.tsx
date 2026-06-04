@@ -1,104 +1,149 @@
 "use client";
 
-import { useState } from "react";
+import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Transaction } from "@/lib/types";
 import { transactionApi } from "@/lib/api";
+import { DeleteOutlined, OpenInNew, NorthEast, SouthWest, CalendarToday } from "@mui/icons-material";
+import { cn } from "@/lib/utils";
 
 interface TransactionListProps {
   transactions: Transaction[];
-  onDelete?: () => void;
-  loading?: boolean;
+  onTransactionDeleted: () => void;
 }
 
-const formatIDR = (amount: number) =>
-  new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(amount).replace('$', '$');
+const formatRupiah = (value: number) =>
+  new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(value);
 
-const formatDate = (dateStr: string) =>
-  new Date(dateStr).toLocaleDateString("en-US", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
-
-const CATEGORY_COLORS: Record<string, string> = {
-  "Food & Drink": "text-[#0BC5EA]",
-  "Transport": "text-[#7551FF]",
-  "Shopping": "text-[#0075FF]",
-  "Entertainment": "text-[#E31A1A]",
-  "Health": "text-[#01B574]",
-  "Salary": "text-[#01B574]",
+const CATEGORY_ID: Record<string, string> = {
+  "Food & Drink": "Makanan & Minuman",
+  Transport: "Transportasi",
+  Shopping: "Belanja",
+  Entertainment: "Hiburan",
+  Health: "Kesehatan",
+  Utilities: "Utilitas",
+  Salary: "Gaji",
+  Freelance: "Freelance",
+  Investment: "Investasi",
+  Other: "Lainnya",
 };
 
-export default function TransactionList({ transactions, onDelete, loading }: TransactionListProps) {
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-
-  const handleDelete = async (id: string) => {
-    setDeletingId(id);
-    try {
-      await transactionApi.remove(id);
-      onDelete?.();
-    } finally {
-      setDeletingId(null);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="vui-card p-6 h-full">
-        <h3 className="text-lg font-bold text-white mb-6">Recent Transactions</h3>
-        <div className="flex flex-col gap-4">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="h-[60px] rounded-xl bg-white/5 animate-pulse" />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
+export default function TransactionList({ transactions, onTransactionDeleted }: TransactionListProps) {
   return (
-    <div className="vui-card p-6 h-full flex flex-col">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-bold text-white">Orders overview</h3>
-        <span className="text-sm font-bold text-[#01B574]">+30% <span className="text-[#A0AEC0]">this month</span></span>
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 120, damping: 20, delay: 0.15 }}
+      className="vui-card overflow-hidden"
+    >
+      <div className="p-8 border-b border-white/5 flex justify-between items-center">
+        <div>
+          <h3 className="text-lg font-bold text-white tracking-tight">Aktivitas Terkini</h3>
+          <p className="text-xs text-zinc-500 font-medium">Aliran transaksi real-time</p>
+        </div>
+        <button className="text-xs font-bold text-brand-blue hover:text-blue-400 transition-colors flex items-center gap-1 group">
+          LIHAT SEMUA <OpenInNew style={{ fontSize: 14 }} className="group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />
+        </button>
       </div>
 
-      <div className="flex flex-col relative">
-         {/* Vertical Timeline Line */}
-         <div className="absolute left-[11px] top-4 bottom-4 w-[2px] bg-[rgba(255,255,255,0.1)] z-0"></div>
-
-        {transactions.length === 0 ? (
-           <p className="text-[#A0AEC0] text-sm py-4">No transactions found.</p>
-        ) : (
-          transactions.map((tx, idx) => {
-            const isIncome = tx.type === "income";
-            const colorClass = CATEGORY_COLORS[tx.category] || "text-[#0075FF]";
-            
-            return (
-              <div key={tx._id} className="flex gap-4 relative z-10 mb-6 last:mb-0 group">
-                <div className="mt-1">
-                   <span className={`material-symbols-outlined text-[22px] bg-[#060B28] rounded-full ${colorClass}`}>
-                      {isIncome ? "add_circle" : "shopping_cart"}
-                   </span>
-                </div>
-                <div className="flex-1 flex flex-col">
-                   <div className="flex justify-between items-start">
-                      <p className="text-sm font-bold text-white leading-tight">
-                        {tx.title}
-                        <span className={`ml-2 text-xs font-normal ${isIncome ? 'text-[#01B574]' : 'text-[#A0AEC0]'}`}>
-                           {isIncome ? "+" : "-"}{formatIDR(tx.amount)}
-                        </span>
-                      </p>
-                      <button
-                        onClick={() => handleDelete(tx._id)}
-                        disabled={deletingId === tx._id}
-                        className="opacity-0 group-hover:opacity-100 text-[#A0AEC0] hover:text-[#E31A1A] transition-all disabled:opacity-50"
+      <div className="overflow-x-auto">
+        <table className="w-full text-left">
+          <thead>
+            <tr className="bg-zinc-900/30">
+              <th className="px-8 py-4 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Deskripsi</th>
+              <th className="px-8 py-4 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Kategori</th>
+              <th className="px-8 py-4 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Tanggal</th>
+              <th className="px-8 py-4 text-[10px] font-black text-zinc-500 uppercase tracking-widest text-right">Jumlah</th>
+              <th className="px-8 py-4 text-[10px] font-black text-zinc-500 uppercase tracking-widest text-right">Aksi</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-white/5">
+            <AnimatePresence mode="popLayout">
+              {transactions.length > 0 ? (
+                transactions.slice(0, 8).map((t, idx) => (
+                  <motion.tr
+                    key={t._id}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.97 }}
+                    transition={{ type: "spring", stiffness: 200, damping: 24, delay: idx * 0.04 }}
+                    className="group hover:bg-white/[0.02] transition-colors"
+                  >
+                    <td className="px-8 py-5">
+                      <div className="flex items-center gap-3">
+                        <div
+                          className={cn(
+                            "w-9 h-9 rounded-xl flex items-center justify-center border shrink-0",
+                            t.type === "income"
+                              ? "bg-brand-green/10 border-brand-green/20 text-brand-green"
+                              : "bg-zinc-800 border-white/5 text-zinc-400"
+                          )}
+                        >
+                          {t.type === "income" ? <SouthWest style={{ fontSize: 16 }} /> : <NorthEast style={{ fontSize: 16 }} />}
+                        </div>
+                        <div>
+                          <div className="text-sm font-bold text-white group-hover:text-brand-blue transition-colors">{t.title}</div>
+                          <div className="text-[10px] font-bold text-zinc-600 uppercase tracking-tighter">
+                            {t.type === "income" ? "Pemasukan" : "Pengeluaran"}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-8 py-5">
+                      <span className="px-3 py-1 bg-zinc-900/50 border border-white/5 rounded-full text-[10px] font-black text-zinc-400 group-hover:border-white/10 transition-colors">
+                        {CATEGORY_ID[t.category] || t.category}
+                      </span>
+                    </td>
+                    <td className="px-8 py-5">
+                      <div className="flex items-center gap-2 text-zinc-500">
+                        <CalendarToday style={{ fontSize: 13 }} />
+                        <span className="text-xs font-medium">{t.date.substring(0, 10)}</span>
+                      </div>
+                    </td>
+                    <td className="px-8 py-5 text-right">
+                      <div
+                        className={cn(
+                          "text-sm font-black tracking-tight",
+                          t.type === "income" ? "text-brand-green" : "text-white"
+                        )}
                       >
-                         <span className="material-symbols-outlined text-sm">close</span>
+                        {t.type === "income" ? "+" : "-"}
+                        {formatRupiah(t.amount)}
+                      </div>
+                    </td>
+                    <td className="px-8 py-5 text-right">
+                      <button
+                        onClick={async () => {
+                          try {
+                            await transactionApi.remove(t._id);
+                            onTransactionDeleted();
+                          } catch (e) {
+                            console.error("Gagal menghapus", e);
+                          }
+                        }}
+                        className="w-8 h-8 rounded-lg bg-zinc-900/50 border border-white/5 flex items-center justify-center text-zinc-600 hover:text-brand-red hover:border-brand-red/30 transition-all group/btn ml-auto"
+                        title="Hapus transaksi"
+                      >
+                        <DeleteOutlined style={{ fontSize: 13 }} className="group-hover/btn:scale-110 transition-transform" />
                       </button>
-                   </div>
-                   <p className="text-xs text-[#A0AEC0] mt-1 font-medium">{formatDate(tx.date)}</p>
-                </div>
-              </div>
-            );
-          })
-        )}
+                    </td>
+                  </motion.tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={5} className="px-8 py-20 text-center">
+                    <div className="flex flex-col items-center justify-center text-zinc-600">
+                      <OpenInNew style={{ fontSize: 36 }} className="mb-4 opacity-10" />
+                      <p className="text-sm font-medium">Buku kas kosong. Aman & terlindungi.</p>
+                      <p className="text-xs mt-1">Mulai tambahkan transaksi baru.</p>
+                    </div>
+                  </td>
+                </tr>
+              )}
+            </AnimatePresence>
+          </tbody>
+        </table>
       </div>
-    </div>
+    </motion.div>
   );
 }

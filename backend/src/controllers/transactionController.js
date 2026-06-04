@@ -1,4 +1,5 @@
 const Transaction = require("../models/Transaction");
+const { mockClassifyTransaction } = require("./aiController");
 
 // GET /api/transactions
 const getAllTransactions = async (req, res) => {
@@ -19,7 +20,22 @@ const getAllTransactions = async (req, res) => {
       Transaction.countDocuments(filter),
     ]);
 
-    // Compute summary
+    res.status(200).json({
+      success: true,
+      count: transactions.length,
+      total,
+      page: Number(page),
+      totalPages: Math.ceil(total / Number(limit)),
+      data: transactions,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// GET /api/transactions/summary
+const getSummary = async (req, res) => {
+  try {
     const allTx = await Transaction.find({});
     const totalIncome = allTx
       .filter((t) => t.type === "income")
@@ -30,17 +46,25 @@ const getAllTransactions = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      count: transactions.length,
-      total,
-      page: Number(page),
-      totalPages: Math.ceil(total / Number(limit)),
-      summary: {
+      data: {
         totalIncome,
         totalExpense,
         balance: totalIncome - totalExpense,
       },
-      data: transactions,
     });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// GET /api/transactions/:id
+const getTransactionById = async (req, res) => {
+  try {
+    const transaction = await Transaction.findById(req.params.id);
+    if (!transaction) {
+      return res.status(404).json({ success: false, message: "Transaction not found" });
+    }
+    res.status(200).json({ success: true, data: transaction });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -49,7 +73,25 @@ const getAllTransactions = async (req, res) => {
 // POST /api/transactions
 const createTransaction = async (req, res) => {
   try {
-    const { title, amount, category, type, date } = req.body;
+    const { title, amount, type, date } = req.body;
+    let { category } = req.body;
+
+    // Simulate AI categorization if category is not provided
+    if (!category) {
+      const aiResult = await mockClassifyTransaction(title, type, amount);
+      const rawCategory = aiResult.category;
+
+      // Map AI Indonesian labels → frontend category keys
+      const categoryMap = {
+        "Gaji":        "Salary",
+        "Makan & Minum": "Food & Drink",
+        "Belanja":     "Shopping",
+        "Hiburan":     "Entertainment",
+        "Tagihan":     "Utilities",
+        "Goals":       "Investment",
+      };
+      category = categoryMap[rawCategory] || rawCategory;
+    }
 
     const transaction = await Transaction.create({
       title,
@@ -64,11 +106,27 @@ const createTransaction = async (req, res) => {
       data: transaction,
     });
   } catch (error) {
-    // Handle Mongoose validation errors
     if (error.name === "ValidationError") {
       const messages = Object.values(error.errors).map((e) => e.message);
       return res.status(400).json({ success: false, message: messages.join(", ") });
     }
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// PUT /api/transactions/:id
+const updateTransaction = async (req, res) => {
+  try {
+    const transaction = await Transaction.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+    if (!transaction) {
+      return res.status(404).json({ success: false, message: "Transaction not found" });
+    }
+    res.status(200).json({ success: true, data: transaction });
+  } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -86,4 +144,28 @@ const deleteTransaction = async (req, res) => {
   }
 };
 
-module.exports = { getAllTransactions, createTransaction, deleteTransaction };
+// POST /api/transactions/upload
+const uploadTransactions = async (req, res) => {
+  try {
+    // This is a mock endpoint for CSV upload (F-01). 
+    // In a real app, we'd use multer to parse the CSV and insertMany.
+    // For now, we'll just return a success message.
+    res.status(200).json({ 
+      success: true, 
+      message: "CSV Uploaded successfully (Mocked)",
+      data: { inserted: 0 }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+module.exports = { 
+  getAllTransactions, 
+  getSummary,
+  getTransactionById,
+  createTransaction, 
+  updateTransaction,
+  deleteTransaction,
+  uploadTransactions
+};

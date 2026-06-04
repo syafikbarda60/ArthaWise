@@ -1,0 +1,9 @@
+{
+  "classifier": {
+    "accuracy": 1.0
+  },
+  "forecaster": {
+    "mae": 0.08203116059303284,
+    "window_size": 14
+  }
+}

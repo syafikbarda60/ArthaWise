@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const connectDB = require("./src/config/db");
 const transactionRoutes = require("./src/routes/transactionRoutes");
+const aiRoutes = require("./src/routes/aiRoutes");
 
 // Connect to MongoDB
 connectDB();
@@ -12,8 +13,10 @@ const app = express();
 // ── Middleware ─────────────────────────────────────────────
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:3000",
-    methods: ["GET", "POST", "DELETE", "PUT", "PATCH"],
+    origin: function (origin, callback) {
+      // Allow all origins in development
+      callback(null, true);
+    },
     credentials: true,
   })
 );
@@ -27,6 +30,7 @@ app.get("/api/health", (_req, res) => {
 
 // ── Routes ─────────────────────────────────────────────────
 app.use("/api/transactions", transactionRoutes);
+app.use("/api/ai", aiRoutes);
 
 // ── 404 Handler ────────────────────────────────────────────
 app.use((_req, res) => {
