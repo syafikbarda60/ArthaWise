@@ -6,7 +6,7 @@ const getAllTransactions = async (req, res) => {
   try {
     const { type, category, limit = 50, page = 1 } = req.query;
 
-    const filter = {};
+    const filter = { userId: req.user.id };
     if (type) filter.type = type;
     if (category) filter.category = category;
 
@@ -36,7 +36,7 @@ const getAllTransactions = async (req, res) => {
 // GET /api/transactions/summary
 const getSummary = async (req, res) => {
   try {
-    const allTx = await Transaction.find({});
+    const allTx = await Transaction.find({ userId: req.user.id });
     const totalIncome = allTx
       .filter((t) => t.type === "income")
       .reduce((sum, t) => sum + t.amount, 0);
@@ -60,7 +60,7 @@ const getSummary = async (req, res) => {
 // GET /api/transactions/:id
 const getTransactionById = async (req, res) => {
   try {
-    const transaction = await Transaction.findById(req.params.id);
+    const transaction = await Transaction.findOne({ _id: req.params.id, userId: req.user.id });
     if (!transaction) {
       return res.status(404).json({ success: false, message: "Transaction not found" });
     }
@@ -94,6 +94,7 @@ const createTransaction = async (req, res) => {
     }
 
     const transaction = await Transaction.create({
+      userId: req.user.id,
       title,
       amount,
       category,
@@ -117,8 +118,8 @@ const createTransaction = async (req, res) => {
 // PUT /api/transactions/:id
 const updateTransaction = async (req, res) => {
   try {
-    const transaction = await Transaction.findByIdAndUpdate(
-      req.params.id,
+    const transaction = await Transaction.findOneAndUpdate(
+      { _id: req.params.id, userId: req.user.id },
       req.body,
       { new: true, runValidators: true }
     );
@@ -134,7 +135,7 @@ const updateTransaction = async (req, res) => {
 // DELETE /api/transactions/:id
 const deleteTransaction = async (req, res) => {
   try {
-    const transaction = await Transaction.findByIdAndDelete(req.params.id);
+    const transaction = await Transaction.findOneAndDelete({ _id: req.params.id, userId: req.user.id });
     if (!transaction) {
       return res.status(404).json({ success: false, message: "Transaction not found" });
     }

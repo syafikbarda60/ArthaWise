@@ -6,6 +6,7 @@ import { ForecastDataPoint, FinancialProfile } from "@/lib/types";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import Sidebar from "@/components/Sidebar";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { 
   Psychology, 
   TrendingUp, 
@@ -41,7 +42,16 @@ export default function AnalyticsPage() {
   const [profile, setProfile] = useState<FinancialProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const router = useRouter();
+
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("auth_token");
+      if (!token) {
+        router.push("/login");
+        return;
+      }
+    }
     const fetchAiData = async () => {
       try {
         const [fData, pData] = await Promise.all([
@@ -58,7 +68,7 @@ export default function AnalyticsPage() {
     };
     
     fetchAiData();
-  }, []);
+  }, [router]);
 
   return (
     <div className="flex h-screen bg-[#09090b] overflow-hidden font-sans text-gray-200">

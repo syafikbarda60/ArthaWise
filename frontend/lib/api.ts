@@ -7,10 +7,26 @@ const apiClient = axios.create({
   timeout: 10000,
 });
 
+apiClient.interceptors.request.use((config) => {
+  if (typeof window !== "undefined") {
+    const token = localStorage.getItem("auth_token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  }
+  return config;
+});
+
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     const message = error.response?.data?.message || error.message || "Network error";
+    if (error.response?.status === 401 && typeof window !== "undefined") {
+      // Force logout on 401
+      localStorage.removeItem("auth_token");
+      localStorage.removeItem("auth_user");
+      window.location.href = "/login";
+    }
     return Promise.reject(new Error(message));
   }
 );
@@ -32,6 +48,21 @@ const withCache = async <T>(key: string, fetcher: () => Promise<T>): Promise<T> 
       }
     }
     throw error;
+  }
+};
+
+export const authApi = {
+  login: async (data: any) => {
+    const response = await apiClient.post("/auth/login", data);
+    return response.data;
+  },
+  register: async (data: any) => {
+    const response = await apiClient.post("/auth/register", data);
+    return response.data;
+  },
+  updateProfile: async (data: { name: string; password?: string }) => {
+    const response = await apiClient.put("/auth/profile", data);
+    return response.data;
   }
 };
 

@@ -10,10 +10,12 @@ const {
   uploadTransactions
 } = require("../controllers/transactionController");
 
-router.route("/summary").get(getSummary);
-router.route("/upload").post(uploadTransactions);
+const { protect } = require("../middleware/authMiddleware");
 
-router.route("/").get(getAllTransactions).post(createTransaction);
-router.route("/:id").get(getTransactionById).put(updateTransaction).delete(deleteTransaction);
+router.route("/summary").get(protect, getSummary);
+router.route("/upload").post(protect, uploadTransactions);
+
+router.route("/").get(protect, getAllTransactions).post(protect, createTransaction);
+router.route("/:id").get(protect, getTransactionById).put(protect, updateTransaction).delete(protect, deleteTransaction);
 
 module.exports = router;

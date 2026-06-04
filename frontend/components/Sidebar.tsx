@@ -19,14 +19,14 @@ import {
 import { cn } from "@/lib/utils";
 
 const MAIN_ITEMS = [
-  { label: "Dasbor", href: "/", icon: <Dashboard style={{ fontSize: 20 }} /> },
+  { label: "Dasbor", href: "/dashboard", icon: <Dashboard style={{ fontSize: 20 }} /> },
   { label: "Transaksi", href: "/transactions", icon: <ReceiptLong style={{ fontSize: 20 }} /> },
   { label: "Analisis AI", href: "/analytics", icon: <BarChart style={{ fontSize: 20 }} /> },
 ];
 
 const HELP_ITEMS = [
   { label: "Bantuan", href: "/support", icon: <Help style={{ fontSize: 20 }} /> },
-  { label: "Pengaturan", href: "/settings", icon: <Settings style={{ fontSize: 20 }} /> },
+  { label: "Profil", href: "/profile", icon: <Settings style={{ fontSize: 20 }} /> },
 ];
 
 const sidebarVariants = {
@@ -248,6 +248,35 @@ export default function Sidebar() {
               </Link>
             );
           })}
+
+          {/* Logout Button */}
+          <button 
+            onClick={() => {
+              localStorage.removeItem("auth_token");
+              localStorage.removeItem("auth_user");
+              window.location.href = "/login";
+            }}
+            className="w-full"
+          >
+            <div className="flex items-center gap-4 px-4 py-3 rounded-xl transition-colors duration-200 group text-zinc-500 hover:text-brand-red hover:bg-brand-red/10">
+              <span className="shrink-0">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+              </span>
+              <AnimatePresence initial={false}>
+                {!collapsed && (
+                  <motion.span
+                    initial={{ opacity: 0, x: -6 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -6 }}
+                    transition={{ duration: 0.15 }}
+                    className="text-sm font-bold tracking-tight whitespace-nowrap"
+                  >
+                    Keluar
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </div>
+          </button>
         </div>
 
         {/* Status Card */}

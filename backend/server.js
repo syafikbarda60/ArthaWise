@@ -28,7 +28,10 @@ app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
+const authRoutes = require("./src/routes/authRoutes");
+
 // ── Routes ─────────────────────────────────────────────────
+app.use("/api/auth", authRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/ai", aiRoutes);
 

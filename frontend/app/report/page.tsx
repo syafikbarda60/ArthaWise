@@ -6,6 +6,7 @@ import { Transaction, FinancialProfile } from "@/lib/types";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import Sidebar from "@/components/Sidebar";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
 import {
   PieChart,
   Warning,
@@ -24,7 +25,16 @@ export default function ReportPage() {
   const [profile, setProfile] = useState<FinancialProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const router = useRouter();
+
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("auth_token");
+      if (!token) {
+        router.push("/login");
+        return;
+      }
+    }
     const fetchData = async () => {
       try {
         const [txData, pData] = await Promise.all([
@@ -40,7 +50,7 @@ export default function ReportPage() {
       }
     };
     fetchData();
-  }, []);
+  }, [router]);
 
   const expensesByCategory = useMemo(() => {
     const expenses = transactions.filter(t => t.type === 'expense');

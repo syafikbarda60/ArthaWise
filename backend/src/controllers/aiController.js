@@ -12,6 +12,7 @@ const getForecast = async (req, res) => {
 
     // Get all expenses from the last 14 days
     const recentTx = await Transaction.find({
+      userId: req.user.id,
       type: "expense",
       date: { $gte: fourteenDaysAgo }
     }).sort({ date: 1 });
@@ -62,7 +63,7 @@ const getForecast = async (req, res) => {
 const getFinancialProfile = async (req, res) => {
   try {
     const Transaction = require("../models/Transaction");
-    const allTx = await Transaction.find({});
+    const allTx = await Transaction.find({ userId: req.user.id });
     
     let totalIncome = 0;
     let totalExpense = 0;
