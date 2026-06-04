@@ -1,0 +1,43 @@
+# AI / Agent files
+.agents/
+.agents
+claude.md
+gemini.md
+chatgpt.md
+.cursor/
+.cursorrules
+.cline/
+.gemini/
+*.ai.md
+
+# Node / JS
+node_modules/
+.pnp
+.pnp.js
+coverage/
+build/
+.next/
+out/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment variables
+.env
+.env*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Misc
+.DS_Store
+*.pem
+.vercel

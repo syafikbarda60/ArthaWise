@@ -1,165 +1,187 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 import { transactionApi } from "@/lib/api";
 import { NewTransactionPayload, TransactionCategory } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
-const CATEGORIES: { key: TransactionCategory; label: string }[] = [
-  { key: "Food & Drink", label: "Food" },
-  { key: "Transport", label: "Transit" },
-  { key: "Shopping", label: "Shopping" },
-  { key: "Entertainment", label: "Entertain" },
-  { key: "Health", label: "Health" },
-  { key: "Utilities", label: "Utilities" },
-  { key: "Salary", label: "Salary" },
-  { key: "Freelance", label: "Freelance" },
-  { key: "Investment", label: "Invest" },
-  { key: "Other", label: "Other" },
+const CATEGORIES: TransactionCategory[] = [
+  "Food & Drink", "Transport", "Shopping", "Entertainment",
+  "Health", "Utilities", "Salary", "Freelance", "Investment", "Other",
 ];
+
+const CATEGORY_ID: Record<string, string> = {
+  "Food & Drink": "Makanan & Minuman",
+  Transport: "Transportasi",
+  Shopping: "Belanja",
+  Entertainment: "Hiburan",
+  Health: "Kesehatan",
+  Utilities: "Utilitas",
+  Salary: "Gaji",
+  Freelance: "Freelance",
+  Investment: "Investasi",
+  Other: "Lainnya",
+};
 
 interface TransactionFormProps {
   onSuccess?: () => void;
 }
 
-const INITIAL = {
-  title: "",
-  amount: "",
-  category: "" as TransactionCategory | "",
-  type: "expense" as "income" | "expense",
-  date: new Date().toISOString().split("T")[0],
-};
-
 export default function TransactionForm({ onSuccess }: TransactionFormProps) {
-  const [form, setForm] = useState(INITIAL);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
-
-  const set = (key: string, value: string) =>
-    setForm((p) => ({ ...p, [key]: value }));
+  const [formData, setFormData] = useState<NewTransactionPayload>({
+    title: "",
+    amount: 0,
+    type: "expense",
+    date: new Date().toISOString().split("T")[0],
+    description: "",
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.category) return setError("Please select a category.");
-    setLoading(true);
-    setError(null);
+    if (!formData.title || formData.amount <= 0) return;
     try {
-      const payload: NewTransactionPayload = {
-        title: form.title.trim(),
-        amount: parseFloat(form.amount),
-        category: form.category as TransactionCategory,
-        type: form.type,
-        date: form.date,
-      };
-      await transactionApi.create(payload);
-      setSuccess(true);
-      setForm(INITIAL);
-      setTimeout(() => { setSuccess(false); onSuccess?.(); }, 1200);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Something went wrong.");
+      setLoading(true);
+      await transactionApi.create(formData);
+      setFormData({ title: "", amount: 0, type: "expense", date: new Date().toISOString().split("T")[0], description: "" });
+      if (onSuccess) onSuccess();
+    } catch (error) {
+      console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="vui-card p-6 h-full flex flex-col">
-      <div className="flex flex-col mb-6">
-        <h3 className="text-lg font-bold text-white mb-1">Add Transaction</h3>
-        <p className="text-sm text-[#A0AEC0]">Record a new entry to your ledger</p>
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 200, damping: 24 }}
+      className="vui-card p-6"
+    >
+      <div className="mb-6">
+        <h2 className="text-lg font-semibold text-white">Tambah Transaksi</h2>
+        <p className="text-sm text-gray-400">Catat entri manual (AI akan mengkategorikan otomatis)</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5 flex-1">
-        {/* Title */}
-        <div className="flex flex-col">
-          <label className="text-sm text-white mb-2 ml-1" htmlFor="title">Title</label>
-          <input
-            id="title"
-            className="vui-input"
-            type="text"
-            placeholder="e.g. Orbital Coffee"
-            value={form.title}
-            onChange={(e) => { set("title", e.target.value); setError(null); }}
-            required
-          />
-        </div>
-
-        {/* Amount */}
-        <div className="flex flex-col">
-          <label className="text-sm text-white mb-2 ml-1" htmlFor="amount">Amount ($)</label>
-          <input
-            id="amount"
-            className="vui-input"
-            type="number"
-            min="0"
-            step="any"
-            placeholder="0"
-            value={form.amount}
-            onChange={(e) => { set("amount", e.target.value); setError(null); }}
-            required
-          />
-        </div>
-
+      <form onSubmit={handleSubmit} className="space-y-4">
         {/* Type Toggle */}
-        <div className="flex flex-col">
-           <label className="text-sm text-white mb-2 ml-1">Type</label>
-           <div className="flex bg-[#0B1437] p-1 rounded-xl border border-[rgba(255,255,255,0.1)]">
-             <button
-                type="button"
-                onClick={() => set("type", "expense")}
-                className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors ${form.type === 'expense' ? 'bg-[#0075FF] text-white' : 'text-[#A0AEC0]'}`}
-             >
-                EXPENSE
-             </button>
-             <button
-                type="button"
-                onClick={() => set("type", "income")}
-                className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors ${form.type === 'income' ? 'bg-[#0075FF] text-white' : 'text-[#A0AEC0]'}`}
-             >
-                INCOME
-             </button>
-           </div>
+        <div className="grid grid-cols-2 gap-3">
+          {(["expense", "income"] as const).map((type) => (
+            <button
+              key={type}
+              type="button"
+              onClick={() => setFormData({ ...formData, type })}
+              className={cn(
+                "py-2.5 rounded-xl text-sm font-semibold transition-all border",
+                formData.type === type
+                  ? type === "expense"
+                    ? "bg-red-500/10 text-red-400 border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.15)]"
+                    : "bg-green-500/10 text-green-400 border-green-500/30 shadow-[0_0_15px_rgba(34,197,94,0.15)]"
+                  : "bg-white/5 text-gray-400 border-transparent hover:bg-white/10"
+              )}
+            >
+              {type === "expense" ? "Pengeluaran" : "Pemasukan"}
+            </button>
+          ))}
         </div>
 
-        {/* Category Select */}
-        <div className="flex flex-col">
-          <label className="text-sm text-white mb-2 ml-1" htmlFor="category">Category</label>
-          <select
-            id="category"
-            className="vui-input cursor-pointer appearance-none"
-            value={form.category}
-            onChange={(e) => { set("category", e.target.value); setError(null); }}
+        {/* Title */}
+        <div>
+          <label className="block text-xs font-semibold text-gray-400 mb-1.5 ml-1">JUDUL</label>
+          <input
+            type="text"
             required
+            placeholder="cth. Makan Siang, Gaji Bulanan"
+            value={formData.title}
+            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            className="vui-input w-full"
+          />
+        </div>
+
+        {/* Amount + Date */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs font-semibold text-gray-400 mb-1.5 ml-1">JUMLAH (Rp)</label>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium text-sm">Rp</span>
+              <input
+                type="number"
+                required
+                min="1"
+                step="1"
+                value={formData.amount || ""}
+                onChange={(e) => setFormData({ ...formData, amount: parseFloat(e.target.value) })}
+                className="vui-input w-full pl-10"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-gray-400 mb-1.5 ml-1">TANGGAL</label>
+            <input
+              type="date"
+              required
+              value={formData.date}
+              onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+              className="vui-input w-full"
+            />
+          </div>
+        </div>
+
+        {/* Category */}
+        <div>
+          <label className="block text-xs font-semibold text-gray-400 mb-1.5 ml-1">KATEGORI</label>
+          <select
+            value={formData.category || ""}
+            onChange={(e) => setFormData({ ...formData, category: e.target.value as TransactionCategory })}
+            className="vui-input w-full bg-[#09090b]"
           >
-            <option value="" disabled>Select Category</option>
-            {CATEGORIES.map(c => <option key={c.key} value={c.key} className="bg-[#0B1437]">{c.label}</option>)}
+            <option value="">-- Biarkan AI kategorikan --</option>
+            {CATEGORIES.map((c) => (
+              <option key={c} value={c}>{CATEGORY_ID[c]}</option>
+            ))}
           </select>
         </div>
 
-        {/* Date */}
-        <div className="flex flex-col">
-          <label className="text-sm text-white mb-2 ml-1" htmlFor="date">Date</label>
+        {/* Notes */}
+        <div>
+          <label className="block text-xs font-semibold text-gray-400 mb-1.5 ml-1">CATATAN</label>
           <input
-            id="date"
-            className="vui-input"
-            type="date"
-            value={form.date}
-            onChange={(e) => set("date", e.target.value)}
-            required
+            type="text"
+            placeholder="Catatan opsional untuk AI mengkategorikan lebih akurat..."
+            value={formData.description}
+            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            className="vui-input w-full"
           />
         </div>
 
-        {error && <p className="text-[#E31A1A] text-xs ml-1">{error}</p>}
-
         {/* Submit */}
-        <button
-          type="submit"
-          disabled={loading || success}
-          className="mt-auto w-full bg-[#0075FF] hover:bg-[#0075FF]/80 text-white font-bold py-3 px-4 rounded-xl transition-colors disabled:opacity-50"
-        >
-          {loading ? "PROCESSING..." : success ? "SAVED!" : "ADD TRANSACTION"}
-        </button>
+        <div className="pt-2">
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full relative overflow-hidden group rounded-xl bg-brand-blue text-white font-bold py-3.5 transition-all hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(0,117,255,0.3)] hover:shadow-[0_0_30px_rgba(0,117,255,0.5)]"
+          >
+            <span className="relative z-10 flex items-center justify-center gap-2">
+              {loading ? (
+                <>
+                  <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  Menyimpan...
+                </>
+              ) : (
+                <>
+                  <span className="material-symbols-outlined text-lg">add_circle</span>
+                  Simpan Transaksi
+                </>
+              )}
+            </span>
+          </button>
+        </div>
       </form>
-    </div>
+    </motion.div>
   );
 }

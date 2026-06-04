@@ -5,6 +5,7 @@ export interface Transaction {
   category: TransactionCategory;
   type: "income" | "expense";
   date: string;
+  category_confidence?: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -38,7 +39,19 @@ export interface ApiResponse<T> {
 export interface NewTransactionPayload {
   title: string;
   amount: number;
-  category: TransactionCategory;
+  category?: TransactionCategory;
   type: "income" | "expense";
   date?: string;
+  description?: string;
+}
+
+export interface ForecastDataPoint {
+  date: string;
+  predicted_expense: number;
+}
+
+export interface FinancialProfile {
+  cluster: string;
+  description: string;
+  characteristics: string[];
 }
