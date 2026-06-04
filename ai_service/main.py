@@ -52,7 +52,7 @@ class ClassifyRequest(BaseModel):
 
 class ForecastRequest(BaseModel):
     recent_expenses: list[float]
-    days_to_predict: int = 7
+    days_to_predict: int = 1
 
 @app.post("/api/ai/classify")
 def classify_transaction(req: ClassifyRequest):

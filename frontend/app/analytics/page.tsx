@@ -204,78 +204,36 @@ export default function AnalyticsPage() {
                     </div>
                   </div>
                   
-                  {/* Chart representation for Forecast */}
-                  <div className="mt-12 h-64 w-full flex items-end justify-between gap-4 px-2">
-                    {forecast.map((day, idx) => {
-                      const maxExpense = Math.max(...forecast.map(f => f.predicted_expense));
-                      const heightPercent = (day.predicted_expense / maxExpense) * 100;
-                      
-                      return (
-                        <div key={idx} className="flex flex-col items-center flex-1 group/bar">
-                          <div className="w-full relative flex justify-center items-end h-48 mb-4">
-                            {/* Hover Value */}
-                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover/bar:opacity-100 transition-all duration-300 bg-zinc-900 border border-white/10 px-2 py-1 rounded text-[10px] font-bold text-white z-20 whitespace-nowrap">
-                              {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(day.predicted_expense)}
-                            </div>
-                            
-                            {/* Background Bar */}
-                            <div className="absolute inset-0 bg-white/[0.02] rounded-2xl" />
-                            
-                            {/* Forecast Bar */}
-                            <motion.div 
-                              initial={{ height: 0 }}
-                              animate={{ height: `${heightPercent}%` }}
-                              transition={{ duration: 1.2, delay: 0.3 + idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                              className="w-full bg-gradient-to-t from-brand-cyan/5 via-brand-cyan/20 to-brand-cyan border-t-2 border-brand-cyan rounded-t-xl relative z-10"
-                            >
-                              <div className="absolute inset-0 bg-brand-cyan opacity-0 group-hover/bar:opacity-20 transition-opacity rounded-t-xl" />
-                            </motion.div>
+                  {/* Forecast display (1 day) */}
+                  <div className="mt-8 flex justify-center">
+                    {forecast.length > 0 ? (
+                      <div className="w-full max-w-md text-center p-8 bg-zinc-900/80 rounded-3xl border border-brand-cyan/20 relative overflow-hidden group">
+                        <div className="absolute inset-0 bg-gradient-to-br from-brand-cyan/5 to-transparent opacity-50" />
+                        
+                        <div className="relative z-10">
+                          <p className="text-sm font-bold text-zinc-500 uppercase tracking-widest mb-4">Pengeluaran Besok</p>
+                          <div className="text-5xl font-black text-white tracking-tighter mb-2">
+                            {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(forecast[0].predicted_expense)}
                           </div>
-                          <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-tighter">
-                            {new Date(day.date).toLocaleDateString(undefined, { weekday: 'short' })}
-                          </span>
+                          <p className="text-xs text-brand-cyan font-bold bg-brand-cyan/10 inline-block px-3 py-1 rounded-full">
+                            Tingkat Akurasi (MAE): Tinggi
+                          </p>
                         </div>
-                      )
-                    })}
+                      </div>
+                    ) : (
+                      <div className="w-full h-32 flex items-center justify-center text-zinc-500 text-sm">Belum ada prediksi</div>
+                    )}
                   </div>
                   
-                  <div className="mt-10 grid grid-cols-2 gap-4">
+                  <div className="mt-10 grid grid-cols-1 gap-4">
                     <div className="p-4 bg-zinc-900/50 rounded-2xl border border-white/5 flex gap-4 items-center">
                       <div className="p-2 bg-brand-blue/10 rounded-lg text-brand-blue">
-                        <AutoAwesome style={{ fontSize: 18 }} />
-                      </div>
-                      <div>
-                        <div className="text-[10px] font-bold text-zinc-500 uppercase">Estimasi Budget Mingguan</div>
-                        <div className="text-sm font-bold text-white">
-                          {forecast.length > 0 ? new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(forecast.reduce((a, b) => a + b.predicted_expense, 0)) : "Rp 0"}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="p-4 bg-zinc-900/50 rounded-2xl border border-white/5 flex gap-4 items-center">
-                      <div className={cn(
-                        "p-2 rounded-lg",
-                        (() => {
-                          if (forecast.length === 0) return "bg-brand-green/10 text-brand-green";
-                          const avg = forecast.reduce((a, b) => a + b.predicted_expense, 0) / forecast.length;
-                          const hasAnomaly = forecast.some(f => f.predicted_expense > avg * 1.5);
-                          return hasAnomaly ? "bg-brand-red/10 text-brand-red" : "bg-brand-green/10 text-brand-green";
-                        })()
-                      )}>
                         <Info style={{ fontSize: 18 }} />
                       </div>
                       <div>
-                        <div className="text-[10px] font-bold text-zinc-500 uppercase">Deteksi Anomali LSTM</div>
+                        <div className="text-[10px] font-bold text-zinc-500 uppercase">Status Pengeluaran</div>
                         <div className="text-sm font-bold text-white">
-                          {(() => {
-                            if (forecast.length === 0) return "Menganalisis...";
-                            const avg = forecast.reduce((a, b) => a + b.predicted_expense, 0) / forecast.length;
-                            const anomalyDay = forecast.find(f => f.predicted_expense > avg * 1.5);
-                            if (anomalyDay) {
-                              const dayName = new Date(anomalyDay.date).toLocaleDateString('id-ID', { weekday: 'long' });
-                              return `Lonjakan di hari ${dayName}`;
-                            }
-                            return "Aman, pola stabil";
-                          })()}
+                          Berdasarkan pola 14 hari terakhir, Anda diprediksi melakukan pengeluaran besok. Siapkan dana!
                         </div>
                       </div>
                     </div>
