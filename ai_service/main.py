@@ -13,7 +13,11 @@ warnings.filterwarnings('ignore')
 app = FastAPI(title="ArthaWise AI API")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_DIR = os.path.join(BASE_DIR, "../saved_models")
+# Cek apakah folder saved_models ada di dalam ai_service (untuk Hugging Face deploy)
+if os.path.exists(os.path.join(BASE_DIR, "saved_models")):
+    MODEL_DIR = os.path.join(BASE_DIR, "saved_models")
+else:
+    MODEL_DIR = os.path.join(BASE_DIR, "../saved_models")
 
 classifier_model = None
 forecasting_model = None
