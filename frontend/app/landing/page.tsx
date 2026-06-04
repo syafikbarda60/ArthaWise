@@ -121,6 +121,7 @@ const MagnetButton = ({ children, className = "", href }: { children: React.Reac
 
 /* ─── ColorBends Background ───────────────────────── */
 import ColorBends from "@/components/ColorBends";
+import { StarBorder } from "@/components/StarBorder";
 
 /* ========================================================================= */
 
@@ -225,10 +226,12 @@ export default function LandingPage() {
         .animate-blob { animation: blob 7s infinite; }
         .animation-delay-2000 { animation-delay: 2s; }
         .animation-delay-4000 { animation-delay: 4s; }
-        ::selection { background: rgba(0,153,255,0.25); }
+        @keyframes star-movement-bottom { 0% { transform: translate(0%, 0%); opacity: 1; } 100% { transform: translate(-100%, 0%); opacity: 0; } }
+        @keyframes star-movement-top { 0% { transform: translate(0%, 0%); opacity: 1; } 100% { transform: translate(100%, 0%); opacity: 0; } }
+        ::selection { background: rgba(245,158,11,0.25); }
         ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #09f; border-radius: 2px; }
+        ::-webkit-scrollbar-thumb { background: #F59E0B; border-radius: 2px; }
       `}</style>
 
       {/* Fuzzy Overlay / Grain (Modern Texture) */}
@@ -316,7 +319,7 @@ export default function LandingPage() {
 
           <h1 className="text-[clamp(3.5rem,9vw,7.5rem)] font-black tracking-[-0.04em] leading-[0.95] mb-8">
             <BlurText text="Finansial Anda," delay={0.1} className="block text-white" />
-            <BlurText text="Lebih Cerdas" delay={0.3} className="block text-[#09f]" />
+            <BlurText text="Lebih Cerdas" delay={0.3} className="block text-transparent bg-clip-text bg-gradient-to-r from-[#F59E0B] to-[#FBBF24]" />
             <BlurText text="dari Sebelumnya." delay={0.5} className="block text-white/30" />
           </h1>
 
@@ -334,14 +337,16 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1 }}
-            className="flex flex-col sm:flex-row items-center gap-4 mb-6"
+            className="flex flex-col sm:flex-row items-center gap-6 mb-6"
           >
-            <MagnetButton href="/register" className="group flex items-center gap-3 px-8 py-3.5 rounded-xl font-bold text-[14px] cursor-pointer bg-white text-black shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:scale-105 transition-transform">
-              Mulai Gratis Sekarang
-              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-              </svg>
-            </MagnetButton>
+            <StarBorder color="#F59E0B" speed="3s">
+              <MagnetButton href="/register" className="group flex items-center gap-3 px-8 py-3.5 rounded-xl font-bold text-[14px] cursor-pointer bg-gradient-to-b from-[#1E293B] to-[#0F172A] border border-white/10 text-white shadow-[0_0_40px_rgba(245,158,11,0.15)] hover:shadow-[0_0_60px_rgba(245,158,11,0.3)] transition-all">
+                Mulai Gratis Sekarang
+                <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform text-[#F59E0B]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                </svg>
+              </MagnetButton>
+            </StarBorder>
             <Link href="/login"
               className="flex items-center gap-2 px-8 py-3.5 rounded-xl font-medium text-[14px] cursor-pointer border border-white/10 text-white/50 hover:bg-white/5 transition-colors">
               Sudah punya akun →
