@@ -122,6 +122,7 @@ const MagnetButton = ({ children, className = "", href }: { children: React.Reac
 /* ─── ColorBends Background ───────────────────────── */
 import ColorBends from "@/components/ColorBends";
 import { StarBorder } from "@/components/StarBorder";
+import { TiltedCard } from "@/components/TiltedCard";
 
 /* ========================================================================= */
 
@@ -363,16 +364,20 @@ export default function LandingPage() {
         >
           <div className="absolute -bottom-1 left-0 right-0 h-48 z-20 pointer-events-none bg-gradient-to-t from-[#050505] to-transparent" />
           
-          <SpotlightCard className="rounded-2xl border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.8)] bg-[#0A0A0A]/80 backdrop-blur-xl" spotlightColor="rgba(255,255,255,0.05)">
-            <div className="flex items-center gap-2 px-4 py-3 border-b border-white/5 bg-white/[0.02]">
-              <div className="flex gap-1.5">
-                {["#ff5f57","#ffbd2e","#28c840"].map(c => <div key={c} className="w-2.5 h-2.5 rounded-full" style={{ background: c }} />)}
+          {/* Glowing Aura Behind Card */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-[#F59E0B]/20 blur-[120px] rounded-full pointer-events-none" />
+
+          <TiltedCard intensity={10} className="w-full h-full">
+            <SpotlightCard className="rounded-2xl border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.8)] bg-[#0A0A0A]/80 backdrop-blur-xl" spotlightColor="rgba(245,158,11,0.15)">
+              <div className="flex items-center gap-2 px-4 py-3 border-b border-white/5 bg-white/[0.02]">
+                <div className="flex gap-1.5">
+                  {["#ff5f57","#ffbd2e","#28c840"].map(c => <div key={c} className="w-2.5 h-2.5 rounded-full" style={{ background: c }} />)}
+                </div>
+                <div className="flex-1 mx-4 px-3 py-1 rounded-md flex items-center gap-2 bg-black/40 border border-white/5 shadow-inner">
+                  <motion.div animate={{ opacity: [1,0.3,1] }} transition={{ duration: 2, repeat: Infinity }} className="w-1.5 h-1.5 rounded-full bg-[#F59E0B]" />
+                  <span className="text-[10px] font-mono text-white/30">arthawise.app/dashboard</span>
+                </div>
               </div>
-              <div className="flex-1 mx-4 px-3 py-1 rounded-md flex items-center gap-2 bg-black/40">
-                <motion.div animate={{ opacity: [1,0.3,1] }} transition={{ duration: 2, repeat: Infinity }} className="w-1.5 h-1.5 rounded-full bg-[#09f]" />
-                <span className="text-[10px] font-mono text-white/30">arthawise.app/dashboard</span>
-              </div>
-            </div>
 
             <div className="p-5">
               <div className="grid grid-cols-3 gap-3 mb-4">
@@ -416,7 +421,8 @@ export default function LandingPage() {
                 </div>
               </div>
             </div>
-          </SpotlightCard>
+            </SpotlightCard>
+          </TiltedCard>
         </motion.div>
       </section>
 
@@ -447,18 +453,25 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ delay: i * 0.1, duration: 0.6 }}
-                className={i === 0 ? "md:col-span-4 md:row-span-2" : i === 1 ? "md:col-span-2 md:row-span-1" : i === 2 ? "md:col-span-2 md:row-span-1" : "md:col-span-6 md:row-span-1"}
+                className={i === 0 ? "md:col-span-4 md:row-span-2 relative group" : i === 1 ? "md:col-span-2 md:row-span-1 relative group" : i === 2 ? "md:col-span-2 md:row-span-1 relative group" : "md:col-span-6 md:row-span-1 relative group"}
               >
-                <SpotlightCard className="h-full group p-8 rounded-3xl cursor-pointer border border-white/10 bg-[#0F172A]/40 backdrop-blur-md transition-colors hover:bg-white/[0.05] flex flex-col justify-between">
-                  <div className="flex items-start justify-between mb-4">
-                    <span className="text-sm font-black tracking-widest text-white/20 font-display">{f.num}</span>
-                    <span className="text-[10px] font-black tracking-widest px-3 py-1.5 rounded-full"
-                      style={{ background: `${f.tagColor}15`, color: f.tagColor, border: `1px solid ${f.tagColor}30` }}>
+                {/* Glowing Background on Hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#F59E0B]/20 to-[#8B5CF6]/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none" />
+                
+                <SpotlightCard className="relative h-full p-8 rounded-3xl cursor-pointer border border-white/10 bg-[#0F172A]/60 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-[#F59E0B]/50 flex flex-col justify-between overflow-hidden">
+                  
+                  {/* Decorative Gradient Blob Inside Card */}
+                  <div className="absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br from-[#F59E0B]/30 to-transparent rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+
+                  <div className="flex items-start justify-between mb-4 relative z-10">
+                    <span className="text-sm font-black tracking-widest text-[#F59E0B] font-display">{f.num}</span>
+                    <span className="text-[10px] font-black tracking-widest px-3 py-1.5 rounded-full shadow-[0_0_15px_rgba(0,0,0,0.5)]"
+                      style={{ background: `${f.tagColor}20`, color: f.tagColor, border: `1px solid ${f.tagColor}40` }}>
                       {f.tag}
                     </span>
                   </div>
-                  <div>
-                    <h3 className="text-3xl font-display font-black text-white mb-3 tracking-tight group-hover:text-[#09f] transition-colors">{f.title}</h3>
+                  <div className="relative z-10">
+                    <h3 className="text-3xl font-display font-black text-white mb-3 tracking-tight group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#F59E0B] group-hover:to-white transition-all duration-300">{f.title}</h3>
                     <p className="text-[15px] leading-relaxed text-white/50 max-w-sm">{f.desc}</p>
                   </div>
                 </SpotlightCard>
@@ -517,11 +530,11 @@ export default function LandingPage() {
               { to: 1, suffix: " Hari", label: "Horizon Prediksi" },
               { to: 100, suffix: "%", label: "Data Terenkripsi" },
             ].map((s, i) => (
-              <SpotlightCard key={s.label} className="text-center p-6 rounded-2xl bg-[#0A0A0A]/50 border border-white/5">
-                <div className="text-4xl md:text-5xl font-black mb-2 text-white">
+              <SpotlightCard key={s.label} className="text-center p-8 rounded-3xl bg-[#0F172A]/40 border border-white/10 hover:border-[#F59E0B]/30 transition-colors">
+                <div className="text-5xl md:text-6xl font-black mb-3 text-transparent bg-clip-text bg-gradient-to-b from-white to-white/40">
                   <Counter to={s.to} suffix={s.suffix} />
                 </div>
-                <div className="text-[12px] font-medium text-white/40">{s.label}</div>
+                <div className="text-[13px] font-semibold tracking-wider uppercase text-[#F59E0B]">{s.label}</div>
               </SpotlightCard>
             ))}
           </div>
@@ -531,7 +544,7 @@ export default function LandingPage() {
       {/* FINAL CTA */}
       <section className="relative z-10 py-36 px-6 border-t border-white/5 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-          <div className="w-full h-full bg-[radial-gradient(ellipse_at_center,rgba(0,153,255,0.1)_0%,transparent_70%)]" />
+          <div className="w-full h-full bg-[radial-gradient(ellipse_at_center,rgba(245,158,11,0.1)_0%,transparent_70%)]" />
         </div>
 
         <motion.div
@@ -544,17 +557,19 @@ export default function LandingPage() {
           <SectionTag label="Mulai Hari Ini" />
           <h2 className="text-5xl md:text-7xl font-black tracking-[-0.04em] leading-[1] mb-8">
             <span className="text-white">Ambil kendali</span><br />
-            <ShinyText text="finansial Anda." className="text-[#09f]" />
+            <ShinyText text="finansial Anda." className="text-[#F59E0B]" />
           </h2>
-          <p className="text-[15px] mb-12 max-w-md mx-auto leading-[1.75] text-white/40">
+          <p className="text-[16px] mb-12 max-w-md mx-auto leading-[1.75] text-white/40">
             Bergabung sekarang dan biarkan AI bekerja untuk masa depan keuangan yang lebih baik.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
-            <MagnetButton href="/register"
-              className="group flex items-center gap-3 px-10 py-4 rounded-xl font-bold text-[15px] text-black cursor-pointer bg-white shadow-[0_0_60px_rgba(255,255,255,0.2)]">
-              Buat Akun Gratis
-            </MagnetButton>
+            <StarBorder color="#F59E0B" speed="2s" className="hover:scale-105 transition-transform duration-300">
+              <MagnetButton href="/register"
+                className="group flex items-center gap-3 px-12 py-5 rounded-xl font-bold text-[16px] text-black cursor-pointer bg-gradient-to-r from-[#FBBF24] to-[#F59E0B] shadow-[0_0_60px_rgba(245,158,11,0.4)]">
+                Buat Akun Gratis Sekarang
+              </MagnetButton>
+            </StarBorder>
           </div>
         </motion.div>
       </section>
