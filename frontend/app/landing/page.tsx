@@ -143,7 +143,7 @@ function Counter({ to, suffix = "" }: { to: number; suffix?: string }) {
   return <span ref={ref}>{val.toLocaleString()}{suffix}</span>;
 }
 
-const TICKER = ["Dashboard Real-Time", "AI LSTM Forecast", "K-Means Clustering", "Laporan DOCX", "Import CSV", "Filter Kategori", "Analisis Anomali", "Profil Finansial"];
+const TICKER = ["Dashboard Real-Time", "AI LSTM Forecast", "Smart Categorization", "Laporan DOCX", "Import CSV", "Filter Kategori", "Analisis Anomali", "Smart Insights"];
 
 function Marquee({ reverse = false }: { reverse?: boolean }) {
   const items = [...TICKER, ...TICKER, ...TICKER];
@@ -183,10 +183,10 @@ function SectionTag({ label }: { label: string }) {
 }
 
 const FEATURES = [
-  { num: "01", title: "Prediksi LSTM", desc: "Neural network meramalkan pengeluaran 7 hari ke depan dari pola transaksi historis Anda.", tag: "AI / ML", tagColor: "#09f" },
-  { num: "02", title: "Dashboard Real-Time", desc: "Visualisasi keuangan lengkap — grafik, KPI cards, dan arus kas yang terupdate instan.", tag: "LIVE", tagColor: "#22c55e" },
-  { num: "03", title: "Profil Finansial AI", desc: "K-Means clustering mengklasifikasi gaya belanja: Hemat, Moderat, atau Boros.", tag: "K-MEANS", tagColor: "#a855f7" },
-  { num: "04", title: "Ekspor & Impor Data", desc: "Download laporan ke DOCX siap cetak, atau upload data lewat CSV dalam hitungan detik.", tag: "EXPORT", tagColor: "#f97316" },
+  { num: "01", title: "Prediksi Presisi AI", desc: "Neural network LSTM meramalkan total pengeluaran esok hari berdasarkan pola historis yang Anda catat.", tag: "LSTM", tagColor: "#09f" },
+  { num: "02", title: "Live Dashboard", desc: "Visualisasi keuangan interaktif yang menampilkan grafik, KPI, dan analisis arus kas instan.", tag: "REAL-TIME", tagColor: "#22c55e" },
+  { num: "03", title: "Smart Categorization", desc: "Algoritma cerdas yang dapat mengelompokkan kategori transaksi secara otomatis dari nama transaksi.", tag: "CLASSIFIER", tagColor: "#a855f7" },
+  { num: "04", title: "Ekspor & Impor Data", desc: "Download rekap dalam format DOCX siap cetak, atau unggah masal data pengeluaran via CSV.", tag: "PRODUCTIVITY", tagColor: "#f97316" },
 ];
 
 const STEPS = [
@@ -217,8 +217,9 @@ export default function LandingPage() {
       style={{ fontFamily: "'Inter', system-ui, sans-serif", scrollBehavior: "smooth" }}>
 
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
         html { scroll-behavior: smooth; }
+        h1, h2, h3, h4, .font-display { font-family: 'Outfit', sans-serif !important; }
         @keyframes shine { 0% { background-position: 200% center; } 100% { background-position: -200% center; } }
         @keyframes blob { 0% { transform: translate(0px, 0px) scale(1); } 33% { transform: translate(30px, -50px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } 100% { transform: translate(0px, 0px) scale(1); } }
         .animate-blob { animation: blob 7s infinite; }
@@ -309,7 +310,7 @@ export default function LandingPage() {
           >
             <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 2, repeat: Infinity }} className="w-1.5 h-1.5 rounded-full bg-[#09f]" />
             <span className="text-[11px] font-semibold tracking-[0.15em] uppercase text-white/80">
-              <ShinyText text="AI-Powered · LSTM · K-Means" />
+              <ShinyText text="AI-Powered · LSTM · Classifier" />
             </span>
           </motion.div>
 
@@ -433,7 +434,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-6 gap-6 auto-rows-[280px]">
             {FEATURES.map((f, i) => (
               <motion.div
                 key={f.num}
@@ -441,17 +442,20 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ delay: i * 0.1, duration: 0.6 }}
+                className={i === 0 ? "md:col-span-4 md:row-span-2" : i === 1 ? "md:col-span-2 md:row-span-1" : i === 2 ? "md:col-span-2 md:row-span-1" : "md:col-span-6 md:row-span-1"}
               >
-                <SpotlightCard className="h-full group p-8 rounded-2xl cursor-pointer border border-white/5 bg-[#0A0A0A]/50 backdrop-blur-sm transition-colors hover:bg-white/[0.03]">
-                  <div className="flex items-start justify-between mb-6">
-                    <span className="text-[11px] font-black tracking-widest text-white/20">{f.num}</span>
-                    <span className="text-[9px] font-black tracking-widest px-2.5 py-1 rounded-full"
+                <SpotlightCard className="h-full group p-8 rounded-3xl cursor-pointer border border-white/10 bg-[#0F172A]/40 backdrop-blur-md transition-colors hover:bg-white/[0.05] flex flex-col justify-between">
+                  <div className="flex items-start justify-between mb-4">
+                    <span className="text-sm font-black tracking-widest text-white/20 font-display">{f.num}</span>
+                    <span className="text-[10px] font-black tracking-widest px-3 py-1.5 rounded-full"
                       style={{ background: `${f.tagColor}15`, color: f.tagColor, border: `1px solid ${f.tagColor}30` }}>
                       {f.tag}
                     </span>
                   </div>
-                  <h3 className="text-xl font-black text-white mb-3 tracking-tight group-hover:text-[#09f] transition-colors">{f.title}</h3>
-                  <p className="text-[14px] leading-relaxed text-white/40">{f.desc}</p>
+                  <div>
+                    <h3 className="text-3xl font-display font-black text-white mb-3 tracking-tight group-hover:text-[#09f] transition-colors">{f.title}</h3>
+                    <p className="text-[15px] leading-relaxed text-white/50 max-w-sm">{f.desc}</p>
+                  </div>
                 </SpotlightCard>
               </motion.div>
             ))}
@@ -504,8 +508,8 @@ export default function LandingPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
             {[
               { to: 160, suffix: "+", label: "Transaksi Dianalisis" },
-              { to: 4, suffix: " Model", label: "Algoritma AI Aktif" },
-              { to: 7, suffix: " Hari", label: "Horizon Prediksi" },
+              { to: 2, suffix: " Model", label: "Algoritma AI Aktif" },
+              { to: 1, suffix: " Hari", label: "Horizon Prediksi" },
               { to: 100, suffix: "%", label: "Data Terenkripsi" },
             ].map((s, i) => (
               <SpotlightCard key={s.label} className="text-center p-6 rounded-2xl bg-[#0A0A0A]/50 border border-white/5">
