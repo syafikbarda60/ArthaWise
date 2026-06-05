@@ -589,10 +589,6 @@ export default function LandingPage() {
                     <div className="text-2xl font-black text-white mb-1">Rp 52.400</div>
                     <div className="text-[13px] text-white/40">Estimasi pengeluaran besok. Margin error (MAE): ± Rp 6.100</div>
                   </div>
-                  <div className="flex items-center gap-2 mt-4">
-                    <div className="h-1 flex-1 rounded-full bg-white/10 overflow-hidden"><div className="h-full w-[72%] bg-[#09f] rounded-full" /></div>
-                    <span className="text-[11px] text-white/30">72% confidence</span>
-                  </div>
                 </Card>
                 <Card className="p-6 flex flex-col justify-between">
                   <div className="text-[#22c55e] text-[11px] font-bold tracking-widest uppercase mb-3">Ringkasan Bulan Ini</div>

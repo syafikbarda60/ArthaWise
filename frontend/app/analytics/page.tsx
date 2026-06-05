@@ -200,10 +200,6 @@ export default function AnalyticsPage() {
                         <div className="text-2xl font-bold text-white tracking-tight">LSTM Spending Forecast</div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-xs font-bold text-zinc-500 uppercase mb-1">Confidence</div>
-                      <div className="text-lg font-black text-brand-cyan">{forecastConfidence.toFixed(1)}%</div>
-                    </div>
                   </div>
                   
                   {/* Forecast display (1 day) */}
