@@ -1,6 +1,6 @@
 # ArthaWise 🚀
 
-> A modern, AI-powered personal finance management platform built with Next.js, Express, FastAPI, and MongoDB.
+> Platform manajemen keuangan pribadi modern berbasis AI yang dibangun dengan Next.js, Express, FastAPI, dan MongoDB.
 
 [![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=flat&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react)](https://react.dev/)
@@ -9,27 +9,24 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-Latest-009688?style=flat&logo=fastapi)](https://fastapi.tiangolo.com/)
 
-## Features
+## Deskripsi Singkat Proyek & Fitur Utama
 
-### For Personal Finance Management
+### Manajemen Keuangan Pribadi
+- **Pencatatan Transaksi**: Mencatat pemasukan dan pengeluaran harian dengan mudah.
+- **Dashboard Interaktif**: Visualisasi data keuangan Anda menggunakan diagram lingkaran (Pie Chart) dan diagram batang (Bar Chart) yang animatif.
+- **Laporan Detail**: Melihat wawasan mendalam dan langkah-langkah yang dapat ditindaklanjuti untuk kesehatan keuangan Anda.
+- **Dukungan Offline**: Penyimpanan lokal sementara memastikan dashboard tetap dapat diakses meskipun tanpa koneksi internet atau database.
 
-- **Transaction Tracking**: Log your daily income and expenses easily.
-- **Interactive Dashboard**: Visualize your financial data with animated Pie Charts and Bar Charts.
-- **Detailed Reports**: View deep insights and actionable steps for your financial health.
-- **Offline Support**: Local storage caching ensures your dashboard is always accessible even without internet or database access.
+### Kecerdasan Buatan (AI)
+- **Klasifikasi Pintar**: Mengklasifikasikan transaksi ke dalam kategori pengeluaran secara otomatis menggunakan model Machine Learning (Tanpa perlu input manual).
+- **1-Day Forecasting (Prediksi)**: Memprediksi pengeluaran Anda untuk hari esok menggunakan jaringan saraf tiruan Long Short-Term Memory (LSTM).
+- **Profil Finansial (Clustering)**: Menentukan persona finansial Anda secara otomatis (misalnya "Penabung Seimbang" atau "Konsumtif") berdasarkan kebiasaan pengeluaran Anda.
+- **Sistem Fallback**: Sistem cadangan darurat (rule-based) untuk memastikan aplikasi tetap berjalan dan memberikan analisis estimasi meskipun service AI (FastAPI) sedang terputus.
 
-### AI-Powered Intelligence
-
-- **Smart Categorization**: Automatically classify transactions into categories using our Machine Learning model.
-- **1-Day Forecasting**: Predict your upcoming expense for tomorrow utilizing Long Short-Term Memory (LSTM) neural networks.
-- **Financial Profiling**: Automatically determine your financial persona (e.g., "Penabung Seimbang") based on your spending habits.
-- **Smart Fallback**: Rule-based fallback systems ensure continuous operation even if the AI service goes down.
-
-### Technical Highlights
-
-- **Microservices Architecture**: Clean separation between Frontend (Next.js), Backend API (Express), and AI Service (FastAPI).
-- **Responsive Design**: Mobile-first, premium dynamic UI with smooth Framer Motion animations.
-- **Type-Safe API**: TypeScript interfaces ensuring robust communication across the stack.
+### Keunggulan Teknis
+- **Arsitektur Microservices**: Pemisahan yang rapi antara Frontend (Next.js), Backend API Utama (Express), dan Service AI (FastAPI).
+- **Desain Responsif**: Desain UI premium bergaya modern-glassmorphism yang dioptimalkan untuk perangkat seluler dan desktop dengan animasi Framer Motion.
+- **Type-Safe API**: Menggunakan interface TypeScript untuk memastikan komunikasi data yang kuat di seluruh stack.
 
 ## Dokumentasi Visual (Screenshots)
 
@@ -45,127 +42,117 @@
 
 > **Catatan Implementasi UI/UX**: Desain di atas menggunakan pendekatan *Dark Mode* modern dengan *Glassmorphism* dan aksen *brand-cyan* untuk memberikan nuansa premium dan futuristik (Sesuai dengan target audiens generasi muda).
 
-## Tech Stack
+## Tech Stack (Teknologi yang Digunakan)
 
 ### Frontend
-
-- **Framework**: Next.js 16 (App Router) with React 19
-- **Language**: TypeScript 5
+- **Framework**: Next.js 16 (App Router) dengan React 19
+- **Bahasa**: TypeScript 5
 - **Styling**: Tailwind CSS 4 + Vanilla CSS
-- **Animations**: Framer Motion
+- **Animasi**: Framer Motion
 - **HTTP Client**: Axios
 
 ### Backend (Main API)
-
 - **Runtime**: Node.js
 - **Framework**: Express.js
 - **Database**: MongoDB (via Mongoose)
-- **Role**: Handles transaction CRUD, summary logic, and acts as an API Gateway to the AI Service.
+- **Peran**: Menangani operasi CRUD transaksi, logika perhitungan total saldo, dan bertindak sebagai API Gateway yang menjembatani Frontend ke Service AI.
 
 ### AI Service (Machine Learning)
-
 - **Framework**: FastAPI (Python)
 - **Deep Learning**: TensorFlow / Keras (LSTM & Neural Networks)
-- **Data Processing**: Scikit-Learn, NumPy, Pandas
-- **Role**: Hosts pre-trained `.keras` and `.pkl` models for real-time inference.
-
-## Prerequisites
-
-- [Node.js](https://nodejs.org/) (v18 or higher)
-- [Python](https://www.python.org/) (v3.9 or higher)
-- [MongoDB](https://www.mongodb.com/) (running locally on port 27017)
+- **Pemrosesan Data**: Scikit-Learn, NumPy, Pandas
+- **Peran**: Meng-host model `.keras` dan `.pkl` yang sudah dilatih (pre-trained) untuk melakukan inferensi prediksi secara real-time.
 
 ## Tautan Model ML (Machine Learning Models)
 
-To run the AI features locally, you must download the pre-trained models from the Google Drive link below and place them in the `saved_models/` directory at the root of the project.
+Untuk menjalankan fitur AI secara lokal, Anda wajib mengunduh model pra-latih (pre-trained models) dari tautan Google Drive di bawah ini dan menempatkannya di dalam folder `saved_models/` yang terletak di root (dasar) proyek ini.
 
-- **Google Drive Link**: [Download ML Models Here](https://drive.google.com/drive/folders/1srmlzFGPbiXzEXEdMWUkrM72_FmX0qsL?usp=sharing)
+- **Tautan Google Drive**: [Download ML Models Di Sini](https://drive.google.com/drive/folders/1srmlzFGPbiXzEXEdMWUkrM72_FmX0qsL?usp=sharing)
 
-Ensure that the project team (`capstone@student.devacademy.id`) has access to this folder.
+Pastikan tim penilai (`capstone@student.devacademy.id`) memiliki akses untuk melihat folder tersebut.
 
-## Setup Environment & Installation
+## Petunjuk Setup Environment
 
-### 1. Clone the Repository
+### Persyaratan Sistem (Prerequisites)
+- [Node.js](https://nodejs.org/) (Versi 18 atau lebih baru)
+- [Python](https://www.python.org/) (Versi 3.9 atau lebih baru)
+- [MongoDB](https://www.mongodb.com/) (Berjalan secara lokal di port 27017)
 
+### 1. Kloning Repositori
 ```bash
-git clone https://github.com/your-username/arthawise.git
-cd arthawise
+git clone https://github.com/syafikbarda60/ArthaWise.git
+cd ArthaWise
 ```
 
-### 2. Run MongoDB
+### 2. Jalankan MongoDB
+Pastikan instans MongoDB lokal Anda sedang berjalan pada port `27017`.
 
-Ensure your local MongoDB instance is running on port `27017`.
-
-### 3. Setup AI Service (Python)
-
+### 3. Konfigurasi AI Service (Python)
+Buka terminal baru:
 ```bash
 cd ai_service
 python -m venv venv
 
-# Activate virtual environment (Windows)
+# Aktifkan virtual environment (Windows)
 .\venv\Scripts\activate
 
-# Install dependencies
+# Instal dependensi
 pip install -r requirements.txt
 
-# Start FastAPI server
+# Jalankan server FastAPI
 uvicorn main:app --host 0.0.0.0 --port 8000
 ```
-*Wait for the "All models loaded successfully!" message.*
+*Tunggu hingga muncul pesan "All models loaded successfully!".*
 
-### 4. Setup Backend (Node.js)
-
-Open a new terminal window:
-
+### 4. Konfigurasi Backend (Node.js)
+Buka terminal baru lagi:
 ```bash
 cd backend
 npm install
 npm run dev:watch
 ```
-*The backend will run on port 5001.*
+*Backend Express akan berjalan di port 5001.*
 
-### 5. Setup Frontend (Next.js)
-
-Open another terminal window:
-
+### 5. Konfigurasi Frontend (Next.js)
+Buka terminal baru yang terakhir:
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-*The frontend will run on port 3000.*
+*Frontend Next.js akan berjalan di port 3000.*
 
-## Cara Menjalankan Aplikasi (Running the Application)
+## Cara Menjalankan Aplikasi
 
-Once all three services (MongoDB, FastAPI, Express) are running and the ML models are placed in the `saved_models/` directory, open [http://localhost:3000](http://localhost:3000) in your browser.
+Setelah ketiga service utama (MongoDB, FastAPI, dan Express) berjalan dengan baik, serta model ML sudah diletakkan di dalam folder `saved_models/`, buka [http://localhost:3000](http://localhost:3000) di browser Anda.
 
 ## Alur Penggunaan Aplikasi (User Flow)
 
 Berikut adalah langkah-langkah singkat untuk menggunakan aplikasi ArthaWise:
 
-1. **Akses Halaman Landing & Login:** Buka aplikasi, baca informasi fitur di halaman utama, lalu lakukan Login untuk masuk ke akun Anda.
-2. **Tambahkan Transaksi Harian:** Buka halaman Transaksi atau Dashboard, klik tombol "Tambah Transaksi" dan masukkan nominal serta deskripsi (contoh: "Beli Nasi Goreng"). **AI akan otomatis mengklasifikasikan** kategori pengeluaran Anda (misal: "Food & Beverage") tanpa perlu Anda pilih manual!
+1. **Akses Halaman Landing & Login:** Buka aplikasi di localhost:3000, baca informasi fitur di halaman utama, lalu lakukan Login untuk masuk ke akun Anda.
+2. **Tambahkan Transaksi Harian:** Buka halaman Transaksi atau Dashboard, klik tombol "Tambah Transaksi" dan masukkan nominal serta deskripsi (contoh: "Beli Nasi Goreng"). **AI akan otomatis mengklasifikasikan** kategori pengeluaran Anda (misal: "Food & Beverage") tanpa perlu Anda pilih secara manual!
 3. **Pantau Dashboard:** Lihat ringkasan keuangan (Saldo, Pemasukan, Pengeluaran), grafik tren mingguan, dan komposisi kategori pengeluaran Anda dalam bentuk visual interaktif.
 4. **Cek Prediksi & Profil di AI Insights:** Kunjungi halaman AI Insights untuk melihat prediksi pengeluaran Anda untuk **besok** (berdasarkan AI LSTM) dan mengetahui **Profil Finansial** Anda (misal: apakah Anda termasuk "Konsumtif" atau "Penabung").
 
-## Project Structure
+## Struktur Proyek
 
 ```text
 arthawise/
-├── ai_service/         # Python Microservice for AI Inference
-│   ├── main.py         # FastAPI Entrypoint
+├── ai_service/         # Microservice Python untuk Inferensi AI
+│   ├── main.py         # Entrypoint FastAPI
 │   └── requirements.txt
-├── backend/            # Node.js Backend (Express & MongoDB)
+├── backend/            # Backend Node.js (Express & MongoDB)
 │   ├── src/
-│   │   ├── controllers/# Business logic
-│   │   ├── models/     # Mongoose schemas
-│   │   └── routes/     # Express routes
+│   │   ├── controllers/# Logika bisnis dan integrasi
+│   │   ├── models/     # Skema Mongoose
+│   │   └── routes/     # Routing Express
 │   └── server.js
-├── frontend/           # Next.js Application
-│   ├── app/            # Next.js App Router (pages)
-│   ├── components/     # Reusable React components (UI, Charts)
-│   └── lib/            # Utilities & Axios API Client
-└── saved_models/       # Pre-trained ML Models
+├── frontend/           # Aplikasi Utama Next.js
+│   ├── app/            # Next.js App Router (Halaman Web)
+│   ├── components/     # Komponen React (UI, Charts) yang dapat digunakan ulang
+│   └── lib/            # Fungsi utilitas & Klien API Axios
+└── saved_models/       # Folder untuk Model ML Pre-trained
     ├── classifier_model.keras
     ├── forecasting_model.keras
     ├── label_encoder.pkl
@@ -173,27 +160,17 @@ arthawise/
     └── scaler_forecast.pkl
 ```
 
-## API Endpoints
+## Daftar API Endpoint
 
-### Transactions (Node.js Backend)
+### Transaksi (Node.js Backend)
+- `GET /api/transactions` - Mendapatkan daftar semua transaksi
+- `POST /api/transactions` - Membuat transaksi baru (Dikategorikan otomatis oleh AI)
+- `DELETE /api/transactions/:id` - Menghapus transaksi
+- `GET /api/transactions/summary` - Mendapatkan ringkasan total pemasukan, pengeluaran, dan saldo
 
-- `GET /api/transactions` - List all transactions
-- `POST /api/transactions` - Create a new transaction (auto-categorized)
-- `DELETE /api/transactions/:id` - Delete a transaction
-- `GET /api/transactions/summary` - Get total income, expenses, and balance
-
-### AI Insights (FastAPI via Node.js Proxy)
-
-- `GET /api/ai/forecast` - Get 1-day expense predictions
-- `GET /api/ai/profile` - Get dynamic financial personality profiling
-
-## Contributing
-
-1. Clone the repository
-2. Create a feature branch: `git checkout -b feature/your-feature`
-3. Commit your changes: `git commit -m 'Add some feature'`
-4. Push to the branch: `git push origin feature/your-feature`
-5. Open a Pull Request
+### Wawasan AI / Insights (FastAPI via Node.js Proxy)
+- `GET /api/ai/forecast` - Mendapatkan prediksi pengeluaran 1 hari ke depan
+- `GET /api/ai/profile` - Mendapatkan pemrofilan kepribadian finansial pengguna secara dinamis
 
 ---
-*Built for the DBS Foundation Capstone Project.*
+*Dibangun untuk DBS Foundation Capstone Project.*
