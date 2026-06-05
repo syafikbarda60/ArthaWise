@@ -122,21 +122,21 @@ export default function Home() {
       <AnimatedBackground />
       <Sidebar />
       
-      <main className="flex-1 flex flex-col h-full overflow-hidden relative z-10 p-6 lg:p-10 ml-0 md:ml-64 transition-all duration-300">
+      <main className="flex-1 flex flex-col h-full overflow-hidden relative z-10 p-4 pt-20 pb-20 lg:p-10 lg:pt-10 lg:pb-10 ml-0 md:ml-64 transition-all duration-300">
         {/* Top Header Navigation */}
-        <header className="flex justify-between items-center mb-10">
+        <header className="flex justify-between items-center mb-6 lg:mb-10">
           <motion.div 
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            className="flex items-center space-x-8"
+            className="flex items-center space-x-4 lg:space-x-8 w-full lg:w-auto overflow-x-auto no-scrollbar"
           >
-            <h1 className="text-2xl font-bold text-white tracking-tight">Ringkasan Keuangan</h1>
-            <nav className="hidden lg:flex p-1 bg-zinc-900/50 rounded-xl border border-white/5 relative">
+            <h1 className="text-xl lg:text-2xl font-bold text-white tracking-tight shrink-0">Ringkasan Keuangan</h1>
+            <nav className="flex lg:flex p-1 bg-zinc-900/50 rounded-xl border border-white/5 relative w-max">
               {(['Hari Ini', 'Minggu', 'Bulan', 'Tahun'] as const).map((tab) => (
                 <button 
                   key={tab} 
                   onClick={() => setTimeFilter(tab)}
-                  className={`relative px-5 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
+                  className={`relative px-3 lg:px-5 py-2 text-xs lg:text-sm font-medium rounded-lg transition-colors duration-200 ${
                     timeFilter === tab 
                       ? 'text-white' 
                       : 'text-zinc-500 hover:text-white'
@@ -158,7 +158,7 @@ export default function Home() {
           <motion.div 
             initial={{ x: 20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            className="flex items-center space-x-4"
+            className="hidden lg:flex items-center space-x-4 shrink-0"
           >
             <div className="flex space-x-2">
               <button className="p-2.5 rounded-xl bg-zinc-900/50 border border-white/5 text-zinc-400 hover:text-white hover:bg-zinc-800/80 transition-all">
@@ -179,7 +179,7 @@ export default function Home() {
           </motion.div>
         </header>
         
-        <div className="flex-1 overflow-y-auto pr-2 pb-24 md:pb-10 customized-scrollbar">
+        <div className="flex-1 overflow-y-auto pr-2 md:pb-10 customized-scrollbar">
           <motion.div
             variants={containerVariants}
             initial="hidden"

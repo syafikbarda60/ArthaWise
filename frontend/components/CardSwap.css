@@ -2,9 +2,9 @@
   position: absolute;
   bottom: 0;
   right: 0;
-  transform: translate(5%, 20%);
+  transform: translate(15%, 15%);
   transform-origin: bottom right;
-  perspective: 900px;
+  perspective: 1200px;
   overflow: visible;
 }
 

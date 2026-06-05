@@ -41,12 +41,12 @@ export default function Sidebar() {
   return (
     <>
       {/* Mobile Top Navigation */}
-      <header className="md:hidden sticky top-0 z-50 flex justify-between items-center w-full px-6 py-4 bg-[#09090b]/90 backdrop-blur-xl border-b border-white/5">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center overflow-hidden">
-            <img src="/logo.png" alt="ArthaWise" className="w-15 h-15 object-contain" />
+      <header className="md:hidden fixed top-0 left-0 right-0 z-50 flex justify-between items-center w-full px-4 py-3 bg-[#09090b]/90 backdrop-blur-xl border-b border-white/5">
+        <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center overflow-hidden w-8 h-8">
+            <img src="/logo.png" alt="ArthaWise" className="w-full h-full object-contain" />
           </div>
-          <span className="font-black text-white tracking-widest text-sm uppercase">ArthaWise</span>
+          <span className="font-black text-white tracking-widest text-xs uppercase">ArthaWise</span>
         </div>
       </header>
 

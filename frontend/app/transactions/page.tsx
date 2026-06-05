@@ -192,8 +192,8 @@ export default function TransactionsPage() {
       <AnimatedBackground />
       <Sidebar activeHref="/transactions" />
       
-      <main className="flex-1 flex flex-col h-full overflow-hidden relative z-10 p-6 lg:p-10 ml-0 md:ml-64 transition-all duration-300">
-        <header className="flex justify-between items-center mb-10">
+      <main className="flex-1 flex flex-col h-full overflow-hidden relative z-10 p-4 pt-20 pb-20 lg:p-10 lg:pt-10 lg:pb-10 ml-0 md:ml-64 transition-all duration-300">
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 lg:mb-10">
           <motion.div
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
@@ -231,7 +231,7 @@ export default function TransactionsPage() {
           </motion.div>
         </header>
         
-        <div className="flex-1 overflow-y-auto pr-2 pb-10 customized-scrollbar">
+        <div className="flex-1 overflow-y-auto pr-2 pb-6 md:pb-10 customized-scrollbar">
           <motion.div 
             variants={containerVariants}
             initial="hidden"
