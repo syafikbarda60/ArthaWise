@@ -59,7 +59,7 @@ export default function ProfilePage() {
             className="max-w-3xl mx-auto space-y-8"
           >
             {/* Profile Card */}
-            <div className="p-8 bg-zinc-900/40 rounded-3xl border border-white/5 relative overflow-hidden backdrop-blur-xl">
+            <div className="p-6 sm:p-8 bg-zinc-900/40 rounded-3xl border border-white/5 relative overflow-hidden backdrop-blur-xl">
               <div className="flex flex-col sm:flex-row items-center gap-6">
                 <div className="relative">
                   <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=2563eb&color=fff&size=120`} alt="Avatar" className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl ring-4 ring-brand-blue/20" />
@@ -109,7 +109,7 @@ export default function ProfilePage() {
             </div>
 
             {/* Danger Zone */}
-            <div className="mt-12 p-6 border border-red-500/20 bg-red-500/5 rounded-3xl backdrop-blur-xl">
+            <div className="mt-8 p-6 border border-red-500/20 bg-red-500/5 rounded-3xl backdrop-blur-xl">
               <h3 className="text-lg font-bold text-white mb-2 text-brand-red">Zona Berbahaya</h3>
               <p className="text-sm text-zinc-500 mb-6">Tindakan di bawah ini tidak dapat dibatalkan.</p>
               

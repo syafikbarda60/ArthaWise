@@ -124,15 +124,16 @@ export default function Home() {
       
       <main className="flex-1 flex flex-col h-full overflow-hidden relative z-10 p-4 pt-20 pb-20 lg:p-10 lg:pt-10 lg:pb-10 ml-0 md:ml-64 transition-all duration-300">
         {/* Top Header Navigation */}
-        <header className="flex justify-between items-center mb-6 lg:mb-10">
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 lg:mb-10">
           <motion.div 
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            className="flex items-center space-x-4 lg:space-x-8 w-full lg:w-auto overflow-x-auto no-scrollbar"
+            className="flex flex-col md:flex-row items-start md:items-center gap-4 lg:gap-8 w-full lg:w-auto"
           >
             <h1 className="text-xl lg:text-2xl font-bold text-white tracking-tight shrink-0">Ringkasan Keuangan</h1>
-            <nav className="flex lg:flex p-1 bg-zinc-900/50 rounded-xl border border-white/5 relative w-max">
-              {(['Hari Ini', 'Minggu', 'Bulan', 'Tahun'] as const).map((tab) => (
+            <div className="w-full overflow-x-auto no-scrollbar pb-1">
+              <nav className="flex p-1 bg-zinc-900/50 rounded-xl border border-white/5 relative w-max">
+                {(['Hari Ini', 'Minggu', 'Bulan', 'Tahun'] as const).map((tab) => (
                 <button 
                   key={tab} 
                   onClick={() => setTimeFilter(tab)}
@@ -152,7 +153,8 @@ export default function Home() {
                   <span className="relative z-10">{tab}</span>
                 </button>
               ))}
-            </nav>
+              </nav>
+            </div>
           </motion.div>
           
           <motion.div 
