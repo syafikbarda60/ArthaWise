@@ -37,11 +37,15 @@
 
 | Halaman Landing | Dashboard |
 |---|---|
-| ![Landing Page](https://image.thum.io/get/width/1200/crop/800/https://artha-wise-jkfn.vercel.app/) | ![Dashboard](https://placehold.co/600x400/1e293b/06b6d4?text=Upload+Screenshot+Dashboard) |
+| ![Landing Page](<img width="1918" height="962" alt="image" src="https://github.com/user-attachments/assets/a218d6c2-5599-4b4a-a71d-4eaf8140553b" />
+) | ![Dashboard](<img width="1919" height="960" alt="image" src="https://github.com/user-attachments/assets/25ee1be3-bb50-4a78-bc61-f94807b6c3de" />
+) |
 
 | Transaksi | AI Insights |
 |---|---|
-| ![Transaksi](https://placehold.co/600x400/1e293b/06b6d4?text=Upload+Screenshot+Transaksi) | ![AI Insights](https://placehold.co/600x400/1e293b/06b6d4?text=Upload+Screenshot+Analytics) |
+| ![Transaksi](<img width="1919" height="964" alt="image" src="https://github.com/user-attachments/assets/5dc97995-e5f7-49be-bf60-f79004cf8e1a" />
+) | ![AI Insights](<img width="1919" height="959" alt="image" src="https://github.com/user-attachments/assets/2715c202-86a4-416c-a129-1d8731f517f6" />
+) |
 
 > **Catatan Implementasi UI/UX**: Desain di atas menggunakan pendekatan *Dark Mode* modern dengan *Glassmorphism* dan aksen *brand-cyan* untuk memberikan nuansa premium dan futuristik (Sesuai dengan target audiens generasi muda).
 
