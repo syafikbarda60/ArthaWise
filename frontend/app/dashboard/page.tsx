@@ -192,7 +192,7 @@ export default function Home() {
               {/* Main Charts */}
               <motion.div variants={itemVariants} className="xl:col-span-2 space-y-8">
                 <DashboardCharts transactions={filteredTransactions} summary={filteredSummary} />
-                <TransactionList transactions={filteredTransactions} onTransactionDeleted={fetchData} />
+                <TransactionList transactions={filteredTransactions} onTransactionDeleted={fetchData} enablePagination={true} limit={5} />
               </motion.div>
 
               {/* Sidebar AI Insights */}

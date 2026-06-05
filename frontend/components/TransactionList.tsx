@@ -40,6 +40,12 @@ export default function TransactionList({
   const itemsPerPage = limit;
   
   const totalPages = Math.ceil(transactions.length / itemsPerPage);
+
+  React.useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(Math.max(1, totalPages));
+    }
+  }, [totalPages, currentPage]);
   
   const displayedTransactions = enablePagination 
     ? transactions.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)

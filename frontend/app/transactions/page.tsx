@@ -35,6 +35,8 @@ export default function TransactionsPage() {
   const [showForm, setShowForm] = useState(false);
   const [filterType, setFilterType] = useState<"all" | "income" | "expense">("all");
   const [filterCategory, setFilterCategory] = useState("all");
+  const [filterMonth, setFilterMonth] = useState("");
+  const [filterDate, setFilterDate] = useState("");
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -177,6 +179,22 @@ export default function TransactionsPage() {
       filtered = filtered.filter(t => t.category === filterCategory);
     }
     
+    if (filterMonth) {
+      filtered = filtered.filter(t => {
+        const tDate = new Date(t.date);
+        const yyyy_mm = `${tDate.getFullYear()}-${String(tDate.getMonth() + 1).padStart(2, '0')}`;
+        return yyyy_mm === filterMonth;
+      });
+    }
+
+    if (filterDate) {
+      filtered = filtered.filter(t => {
+        const tDate = new Date(t.date);
+        const yyyy_mm_dd = `${tDate.getFullYear()}-${String(tDate.getMonth() + 1).padStart(2, '0')}-${String(tDate.getDate()).padStart(2, '0')}`;
+        return yyyy_mm_dd === filterDate;
+      });
+    }
+
     if (!searchQuery.trim()) return filtered;
     
     const lowerQuery = searchQuery.toLowerCase();
@@ -185,7 +203,7 @@ export default function TransactionsPage() {
       t.category.toLowerCase().includes(lowerQuery) ||
       t.type.toLowerCase().includes(lowerQuery)
     );
-  }, [transactions, searchQuery, filterType, filterCategory]);
+  }, [transactions, searchQuery, filterType, filterCategory, filterMonth, filterDate]);
 
   return (
     <div className="flex h-screen bg-[#09090b] overflow-hidden font-sans text-gray-200">
@@ -335,6 +353,34 @@ export default function TransactionsPage() {
                               <option value="Investment">Investasi</option>
                               <option value="Other">Lainnya</option>
                             </select>
+                          </div>
+                          <div>
+                            <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 block">Bulan</label>
+                            <div className="flex gap-2">
+                              <input 
+                                type="month" 
+                                value={filterMonth} 
+                                onChange={e => { setFilterMonth(e.target.value); setFilterDate(""); }}
+                                className="w-full bg-zinc-950 border border-white/10 rounded-lg p-2 text-xs font-bold text-zinc-300 focus:outline-none focus:border-brand-blue/50 [color-scheme:dark]"
+                              />
+                              {filterMonth && (
+                                <button onClick={() => setFilterMonth("")} className="text-xs text-brand-red px-2">X</button>
+                              )}
+                            </div>
+                          </div>
+                          <div>
+                            <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 block">Tanggal Spesifik</label>
+                            <div className="flex gap-2">
+                              <input 
+                                type="date" 
+                                value={filterDate} 
+                                onChange={e => { setFilterDate(e.target.value); setFilterMonth(""); }}
+                                className="w-full bg-zinc-950 border border-white/10 rounded-lg p-2 text-xs font-bold text-zinc-300 focus:outline-none focus:border-brand-blue/50 [color-scheme:dark]"
+                              />
+                              {filterDate && (
+                                <button onClick={() => setFilterDate("")} className="text-xs text-brand-red px-2">X</button>
+                              )}
+                            </div>
                           </div>
                         </motion.div>
                       )}
