@@ -163,12 +163,7 @@ export default function Home() {
             className="hidden lg:flex items-center space-x-4 shrink-0"
           >
             <div className="flex space-x-2">
-              <button className="p-2.5 rounded-xl bg-zinc-900/50 border border-white/5 text-zinc-400 hover:text-white hover:bg-zinc-800/80 transition-all">
-                <Notifications style={{ fontSize: 20 }} />
-              </button>
-              <button className="p-2.5 rounded-xl bg-zinc-900/50 border border-white/5 text-zinc-400 hover:text-white hover:bg-zinc-800/80 transition-all">
-                <Settings style={{ fontSize: 20 }} />
-              </button>
+              {/* Notifications and Settings removed */}
             </div>
             <div className="h-10 w-[1px] bg-white/10 mx-2" />
             <div className="flex items-center space-x-3 pl-2">

@@ -233,30 +233,7 @@ export default function Sidebar() {
           </button>
         </div>
 
-        {/* Status Card */}
-        <AnimatePresence>
-          {!collapsed && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ type: "spring", stiffness: 200, damping: 25 }}
-              className="mt-auto w-full p-5 bg-zinc-900/40 rounded-3xl border border-white/5 relative overflow-hidden"
-            >
-              <div className="absolute top-0 right-0 p-4 text-brand-green/10">
-                <GppGood style={{ fontSize: 48 }} />
-              </div>
-              <h6 className="text-white text-xs font-bold mb-1 relative z-10">Status Sistem</h6>
-              <p className="text-zinc-500 text-[10px] mb-4 leading-relaxed relative z-10">
-                Semua model AI berjalan dengan performa optimal.
-              </p>
-              <div className="flex items-center gap-2 relative z-10">
-                <div className="w-2 h-2 rounded-full bg-brand-green animate-pulse" />
-                <span className="text-[10px] font-black text-brand-green uppercase tracking-widest">Aman</span>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Status Card removed */}
       </motion.nav>
 
       {/* Mobile Bottom Navigation */}
