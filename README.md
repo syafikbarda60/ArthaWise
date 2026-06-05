@@ -139,6 +139,15 @@ npm run dev
 
 Once all three services (MongoDB, FastAPI, Express) are running and the ML models are placed in the `saved_models/` directory, open [http://localhost:3000](http://localhost:3000) in your browser.
 
+## Alur Penggunaan Aplikasi (User Flow)
+
+Berikut adalah langkah-langkah singkat untuk menggunakan aplikasi ArthaWise:
+
+1. **Akses Halaman Landing & Login:** Buka aplikasi, baca informasi fitur di halaman utama, lalu lakukan Login untuk masuk ke akun Anda.
+2. **Tambahkan Transaksi Harian:** Buka halaman Transaksi atau Dashboard, klik tombol "Tambah Transaksi" dan masukkan nominal serta deskripsi (contoh: "Beli Nasi Goreng"). **AI akan otomatis mengklasifikasikan** kategori pengeluaran Anda (misal: "Food & Beverage") tanpa perlu Anda pilih manual!
+3. **Pantau Dashboard:** Lihat ringkasan keuangan (Saldo, Pemasukan, Pengeluaran), grafik tren mingguan, dan komposisi kategori pengeluaran Anda dalam bentuk visual interaktif.
+4. **Cek Prediksi & Profil di AI Insights:** Kunjungi halaman AI Insights untuk melihat prediksi pengeluaran Anda untuk **besok** (berdasarkan AI LSTM) dan mengetahui **Profil Finansial** Anda (misal: apakah Anda termasuk "Konsumtif" atau "Penabung").
+
 ## Project Structure
 
 ```text
