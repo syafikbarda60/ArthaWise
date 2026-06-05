@@ -1,18 +1,3 @@
-# AI / Agent files
-.agent/
-.agents/
-.agents
-*claude.md
-*gemini.md
-*chatgpt.md
-*AGENTS.md
-*CLAUDE.md
-*GEMINI.md
-.cursor/
-.cursorrules
-.cline/
-.gemini/
-*.ai.md
 
 # Node / JS
 node_modules/
