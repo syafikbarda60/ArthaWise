@@ -584,10 +584,10 @@ export default function LandingPage() {
                 height={420}
               >
                 <Card className="p-6 flex flex-col justify-between">
-                  <div className="text-[#09f] text-[11px] font-bold tracking-widest uppercase mb-3">Prediksi AI</div>
+                  <div className="text-[#09f] text-[11px] font-bold tracking-widest uppercase mb-3">Batas Pengeluaran AI</div>
                   <div>
                     <div className="text-2xl font-black text-white mb-1">Rp 52.400</div>
-                    <div className="text-[13px] text-white/40">Estimasi pengeluaran besok berdasarkan pola 14 hari terakhir</div>
+                    <div className="text-[13px] text-white/40">Batas maksimal pengeluaran besok berdasarkan pola 14 hari terakhir</div>
                   </div>
                   <div className="flex items-center gap-2 mt-4">
                     <div className="h-1 flex-1 rounded-full bg-white/10 overflow-hidden"><div className="h-full w-[72%] bg-[#09f] rounded-full" /></div>
