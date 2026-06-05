@@ -47,7 +47,7 @@ export default function Home() {
 
   const fetchData = async () => {
     try {
-      const [txData, summaryData, fData, pData] = await Promise.all([
+      const [txData, summaryData, fRes, pData] = await Promise.all([
         transactionApi.getAll(),
         transactionApi.getSummary(),
         aiApi.getForecast(),
@@ -56,7 +56,7 @@ export default function Home() {
       
       setAllTransactions(txData);
       setGlobalSummary(summaryData);
-      setForecast(fData);
+      setForecast(fRes.data);
       setProfile(pData);
     } catch (error) {
       console.error("Error fetching data:", error);
