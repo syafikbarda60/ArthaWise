@@ -243,7 +243,7 @@ export default function Home() {
                               initial={{ height: 0 }}
                               animate={{ height: `${Math.max(heightPct, 8)}%` }}
                               transition={{ type: 'spring', stiffness: 100, damping: 18, delay: 0.3 + i * 0.07 }}
-                              className="flex-1 bg-brand-cyan/30 hover:bg-brand-cyan/50 rounded-t-md relative group cursor-pointer transition-colors"
+                              className="flex-1 bg-brand-cyan hover:bg-cyan-400 rounded-t-md relative group cursor-pointer transition-colors"
                             >
                               <div className="absolute inset-0 bg-brand-cyan opacity-0 group-hover:opacity-100 transition-opacity rounded-t-md shadow-[0_0_15px_rgba(6,182,212,0.6)]" />
                             </motion.div>
