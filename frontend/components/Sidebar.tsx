@@ -22,10 +22,6 @@ const MAIN_ITEMS = [
   { label: "Dasbor", href: "/dashboard", icon: <Dashboard style={{ fontSize: 20 }} /> },
   { label: "Transaksi", href: "/transactions", icon: <ReceiptLong style={{ fontSize: 20 }} /> },
   { label: "Analisis AI", href: "/analytics", icon: <BarChart style={{ fontSize: 20 }} /> },
-];
-
-const HELP_ITEMS = [
-  { label: "Bantuan", href: "/support", icon: <Help style={{ fontSize: 20 }} /> },
   { label: "Profil", href: "/profile", icon: <Settings style={{ fontSize: 20 }} /> },
 ];
 
@@ -205,49 +201,7 @@ export default function Sidebar() {
         </div>
 
         {/* Help Items */}
-        <div className="w-full space-y-1 mt-10">
-          <AnimatePresence initial={false}>
-            {!collapsed && (
-              <motion.p
-                key="help-label"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] mb-4 ml-4"
-              >
-                Dukungan
-              </motion.p>
-            )}
-          </AnimatePresence>
-          {HELP_ITEMS.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link key={item.href} href={item.href} className="block w-full">
-                <div
-                  className={cn(
-                    "flex items-center gap-4 px-4 py-3 rounded-xl transition-colors duration-200 group",
-                    isActive ? "bg-zinc-900 text-white" : "text-zinc-500 hover:text-white hover:bg-zinc-900/30"
-                  )}
-                >
-                  <span className="shrink-0">{item.icon}</span>
-                  <AnimatePresence initial={false}>
-                    {!collapsed && (
-                      <motion.span
-                        key={`help-${item.href}`}
-                        initial={{ opacity: 0, x: -6 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -6 }}
-                        transition={{ duration: 0.15 }}
-                        className="text-sm font-bold tracking-tight whitespace-nowrap"
-                      >
-                        {item.label}
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </Link>
-            );
-          })}
+        <div className="w-full space-y-1 mt-auto">
 
           {/* Logout Button */}
           <button 
@@ -306,7 +260,7 @@ export default function Sidebar() {
       </motion.nav>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 bg-[#09090b]/90 backdrop-blur-xl border-t border-white/5">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 w-full z-50 flex justify-between items-center px-6 py-3 bg-[#09090b]/90 backdrop-blur-xl border-t border-white/5 pb-safe">
         {MAIN_ITEMS.map((item) => {
           const isActive = pathname === item.href;
           return (
