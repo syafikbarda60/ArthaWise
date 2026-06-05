@@ -213,12 +213,12 @@ export default function AnalyticsPage() {
                         <div className="absolute inset-0 bg-gradient-to-br from-brand-cyan/5 to-transparent opacity-50" />
                         
                         <div className="relative z-10">
-                          <p className="text-sm font-bold text-zinc-500 uppercase tracking-widest mb-4">Batas Pengeluaran Besok</p>
+                          <p className="text-sm font-bold text-zinc-500 uppercase tracking-widest mb-4">Prediksi Pengeluaran Besok</p>
                           <div className="text-5xl font-black text-white tracking-tighter mb-2">
                             {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(forecast[0].predicted_expense)}
                           </div>
                           <p className="text-xs text-brand-cyan font-bold bg-brand-cyan/10 inline-block px-3 py-1 rounded-full">
-                            Tingkat Akurasi (MAE): Tinggi
+                            Rentang (MAE): ± {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(forecast[0].predicted_expense * ((100 - forecastConfidence) / 100))}
                           </p>
                         </div>
                       </div>
@@ -233,9 +233,9 @@ export default function AnalyticsPage() {
                         <Info style={{ fontSize: 18 }} />
                       </div>
                       <div>
-                        <div className="text-[10px] font-bold text-zinc-500 uppercase">Status Rekomendasi</div>
+                        <div className="text-[10px] font-bold text-zinc-500 uppercase">Status Prediksi</div>
                         <div className="text-sm font-bold text-white">
-                          Berdasarkan pola 14 hari terakhir, batas maksimal pengeluaran aman Anda besok adalah nilai di atas. Jaga pengeluaran!
+                          Berdasarkan pola 14 hari terakhir, Anda diprediksi mengeluarkan dana sebesar nilai di atas, dengan margin error (MAE) sesuai rentang.
                         </div>
                       </div>
                     </div>
