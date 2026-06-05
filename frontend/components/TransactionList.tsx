@@ -56,7 +56,7 @@ export default function TransactionList({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 120, damping: 20, delay: 0.15 }}
-      className="vui-card overflow-hidden flex flex-col h-full"
+      className="vui-card overflow-hidden flex flex-col"
     >
       <div className="p-8 border-b border-white/5 flex justify-between items-center shrink-0">
         <div>
@@ -70,7 +70,7 @@ export default function TransactionList({
         )}
       </div>
 
-      <div className="overflow-x-auto flex-1">
+      <div className="overflow-x-auto">
         <table className="w-full text-left">
           <thead>
             <tr className="bg-zinc-900/30">
