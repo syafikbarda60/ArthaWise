@@ -10,6 +10,12 @@ import { Settings, Person, Email, VpnKey, DeleteForever, ExitToApp } from "@mui/
 export default function ProfilePage() {
   const [userName, setUserName] = useState("Pengguna Artha");
   const [userEmail, setUserEmail] = useState("user@arthawise.app");
+  const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState("");
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -34,6 +40,90 @@ export default function ProfilePage() {
     localStorage.removeItem("auth_token");
     localStorage.removeItem("auth_user");
     router.push("/login");
+  };
+
+  const handleUpdateProfile = async () => {
+    if (!editName.trim()) return;
+    setIsLoading(true);
+    try {
+      const token = localStorage.getItem("auth_token");
+      const res = await fetch("http://localhost:5000/api/auth/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ name: editName }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setUserName(data.data.name);
+        localStorage.setItem("auth_user", JSON.stringify(data.data));
+        localStorage.setItem("auth_token", data.data.token);
+        setIsEditing(false);
+        alert("Profil berhasil diperbarui!");
+      } else {
+        alert(data.message || "Gagal memperbarui profil");
+      }
+    } catch (e) {
+      alert("Terjadi kesalahan jaringan");
+    }
+    setIsLoading(false);
+  };
+
+  const handleChangePassword = async () => {
+    if (!newPassword.trim() || newPassword.length < 6) {
+      alert("Kata sandi minimal 6 karakter");
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const token = localStorage.getItem("auth_token");
+      const res = await fetch("http://localhost:5000/api/auth/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ password: newPassword }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        localStorage.setItem("auth_user", JSON.stringify(data.data));
+        localStorage.setItem("auth_token", data.data.token);
+        setIsChangingPassword(false);
+        setNewPassword("");
+        alert("Sandi berhasil diubah!");
+      } else {
+        alert(data.message || "Gagal mengubah sandi");
+      }
+    } catch (e) {
+      alert("Terjadi kesalahan jaringan");
+    }
+    setIsLoading(false);
+  };
+
+  const handleDeleteAccount = async () => {
+    const confirm = window.confirm("Apakah Anda yakin ingin menghapus akun? Tindakan ini tidak dapat dibatalkan.");
+    if (!confirm) return;
+
+    try {
+      const token = localStorage.getItem("auth_token");
+      const res = await fetch("http://localhost:5000/api/auth/profile", {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.ok) {
+        alert("Akun berhasil dihapus.");
+        handleLogout();
+      } else {
+        alert("Gagal menghapus akun.");
+      }
+    } catch (e) {
+      alert("Terjadi kesalahan jaringan");
+    }
   };
 
   return (
@@ -88,10 +178,38 @@ export default function ProfilePage() {
                   </div>
                   <h3 className="text-lg font-bold text-white mb-2">Informasi Pribadi</h3>
                   <p className="text-sm text-zinc-500 mb-6">Ubah nama, email, dan preferensi akun Anda.</p>
+                  
+                  {isEditing && (
+                    <div className="mb-4">
+                      <input 
+                        type="text" 
+                        value={editName}
+                        onChange={(e) => setEditName(e.target.value)}
+                        placeholder="Nama Baru"
+                        className="w-full px-4 py-2 bg-zinc-800/50 border border-white/10 rounded-xl text-white outline-none focus:border-brand-blue"
+                      />
+                      <div className="flex gap-2 mt-3">
+                        <button onClick={handleUpdateProfile} disabled={isLoading} className="flex-1 py-2 bg-brand-blue hover:bg-blue-600 rounded-lg text-sm font-bold text-white transition-colors">
+                          {isLoading ? "Menyimpan..." : "Simpan"}
+                        </button>
+                        <button onClick={() => setIsEditing(false)} className="flex-1 py-2 bg-zinc-700 hover:bg-zinc-600 rounded-lg text-sm font-bold text-white transition-colors">
+                          Batal
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <button className="w-full py-3 bg-white/5 hover:bg-white/10 rounded-xl text-sm font-bold text-white transition-colors border border-white/10">
-                  Edit Profil
-                </button>
+                {!isEditing && (
+                  <button 
+                    onClick={() => {
+                      setEditName(userName);
+                      setIsEditing(true);
+                    }}
+                    className="w-full py-3 bg-white/5 hover:bg-white/10 rounded-xl text-sm font-bold text-white transition-colors border border-white/10"
+                  >
+                    Edit Profil
+                  </button>
+                )}
               </div>
 
               <div className="p-6 bg-zinc-900/40 rounded-3xl border border-white/5 backdrop-blur-xl flex flex-col justify-between">
@@ -100,11 +218,36 @@ export default function ProfilePage() {
                     <VpnKey />
                   </div>
                   <h3 className="text-lg font-bold text-white mb-2">Keamanan</h3>
-                  <p className="text-sm text-zinc-500 mb-6">Ubah kata sandi dan aktifkan autentikasi dua faktor.</p>
+                  <p className="text-sm text-zinc-500 mb-6">Ubah kata sandi untuk melindungi akun Anda.</p>
+                  
+                  {isChangingPassword && (
+                    <div className="mb-4">
+                      <input 
+                        type="password" 
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        placeholder="Sandi Baru (Min 6 Karakter)"
+                        className="w-full px-4 py-2 bg-zinc-800/50 border border-white/10 rounded-xl text-white outline-none focus:border-brand-cyan"
+                      />
+                      <div className="flex gap-2 mt-3">
+                        <button onClick={handleChangePassword} disabled={isLoading} className="flex-1 py-2 bg-brand-cyan hover:bg-cyan-600 rounded-lg text-sm font-bold text-white transition-colors">
+                          {isLoading ? "Menyimpan..." : "Simpan"}
+                        </button>
+                        <button onClick={() => setIsChangingPassword(false)} className="flex-1 py-2 bg-zinc-700 hover:bg-zinc-600 rounded-lg text-sm font-bold text-white transition-colors">
+                          Batal
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <button className="w-full py-3 bg-white/5 hover:bg-white/10 rounded-xl text-sm font-bold text-white transition-colors border border-white/10">
-                  Ubah Sandi
-                </button>
+                {!isChangingPassword && (
+                  <button 
+                    onClick={() => setIsChangingPassword(true)}
+                    className="w-full py-3 bg-white/5 hover:bg-white/10 rounded-xl text-sm font-bold text-white transition-colors border border-white/10"
+                  >
+                    Ubah Sandi
+                  </button>
+                )}
               </div>
             </div>
 
@@ -118,7 +261,10 @@ export default function ProfilePage() {
                   <ExitToApp style={{ fontSize: 18 }} />
                   Keluar dari Akun
                 </button>
-                <button className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand-red/10 hover:bg-brand-red/20 rounded-xl text-sm font-bold text-brand-red transition-colors border border-brand-red/30">
+                <button 
+                  onClick={handleDeleteAccount}
+                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand-red/10 hover:bg-brand-red/20 rounded-xl text-sm font-bold text-brand-red transition-colors border border-brand-red/30"
+                >
                   <DeleteForever style={{ fontSize: 18 }} />
                   Hapus Akun
                 </button>

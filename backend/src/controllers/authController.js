@@ -112,8 +112,27 @@ const updateProfile = async (req, res) => {
   }
 };
 
+// @desc    Delete user account
+// @route   DELETE /api/auth/profile
+// @access  Private
+const deleteAccount = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (user) {
+      await user.deleteOne();
+      res.json({ success: true, message: 'User removed' });
+    } else {
+      res.status(404).json({ success: false, message: 'User not found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
   updateProfile,
+  deleteAccount,
 };
