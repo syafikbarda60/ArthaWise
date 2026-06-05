@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-const FASTAPI_URL = process.env.FASTAPI_URL || "http://localhost:8000";
+const FASTAPI_URL = process.env.FASTAPI_URL || "http://127.0.0.1:8000";
 
 // GET /api/ai/forecast
 const getForecast = async (req, res) => {
@@ -44,12 +44,18 @@ const getForecast = async (req, res) => {
       // Fallback response if Python is off
       const data = [];
       const now = new Date();
+      
+      // Deterministic fallback based on recent expenses
+      const total = dailyExpenses.reduce((a, b) => a + b, 0);
+      const avg = total / 14;
+      const predicted = avg > 0 ? avg * 1.05 : 50000;
+
       for (let i = 1; i <= 1; i++) {
         const nextDate = new Date(now);
         nextDate.setDate(now.getDate() + i);
         data.push({
           date: nextDate.toISOString(),
-          predicted_expense: 50000 + Math.random() * 80000, 
+          predicted_expense: predicted, 
         });
       }
       return res.status(200).json({ success: true, data, confidence: 85.5 });
