@@ -530,12 +530,33 @@ export default function LandingPage() {
               </p>
               <div className="flex flex-col gap-4">
                 {[
-                  { icon: "⚡", title: "Cepat & Ringan", desc: "Interface responsif tanpa loading lama" },
-                  { icon: "🔒", title: "Aman & Privat", desc: "Data terenkripsi, hanya Anda yang bisa akses" },
-                  { icon: "📊", title: "Insight Instan", desc: "AI langsung memberikan analisis begitu data masuk" },
+                  {
+                    icon: (
+                      <svg className="w-5 h-5 text-[#09f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                    ),
+                    title: "Cepat & Ringan", desc: "Interface responsif tanpa loading lama"
+                  },
+                  {
+                    icon: (
+                      <svg className="w-5 h-5 text-[#09f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                      </svg>
+                    ),
+                    title: "Aman & Privat", desc: "Data terenkripsi, hanya Anda yang bisa akses"
+                  },
+                  {
+                    icon: (
+                      <svg className="w-5 h-5 text-[#09f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                      </svg>
+                    ),
+                    title: "Insight Instan", desc: "AI langsung memberikan analisis begitu data masuk"
+                  },
                 ].map((item) => (
                   <div key={item.title} className="flex items-start gap-4 p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors cursor-default">
-                    <span className="text-xl mt-0.5">{item.icon}</span>
+                    <div className="mt-0.5 p-1.5 rounded-md bg-[#09f]/10 border border-[#09f]/20">{item.icon}</div>
                     <div>
                       <div className="text-[14px] font-bold text-white mb-0.5">{item.title}</div>
                       <div className="text-[13px] text-white/40">{item.desc}</div>
@@ -555,12 +576,12 @@ export default function LandingPage() {
               style={{ height: 500 }}
             >
               <CardSwap
-                cardDistance={50}
-                verticalDistance={60}
+                cardDistance={60}
+                verticalDistance={70}
                 delay={4000}
                 pauseOnHover={true}
-                width={380}
-                height={260}
+                width={460}
+                height={320}
               >
                 <Card className="p-6 flex flex-col justify-between">
                   <div className="text-[#09f] text-[11px] font-bold tracking-widest uppercase mb-3">Prediksi AI</div>
