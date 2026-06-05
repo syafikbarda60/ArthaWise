@@ -21,7 +21,7 @@
 ### AI-Powered Intelligence
 
 - **Smart Categorization**: Automatically classify transactions into categories using our Machine Learning model.
-- **7-Day Forecasting**: Predict your upcoming expenses for the next 7 days utilizing Long Short-Term Memory (LSTM) neural networks.
+- **1-Day Forecasting**: Predict your upcoming expense for tomorrow utilizing Long Short-Term Memory (LSTM) neural networks.
 - **Financial Profiling**: Automatically determine your financial persona (e.g., "Penabung Seimbang") based on your spending habits.
 - **Smart Fallback**: Rule-based fallback systems ensure continuous operation even if the AI service goes down.
 
@@ -61,7 +61,15 @@
 - [Python](https://www.python.org/) (v3.9 or higher)
 - [MongoDB](https://www.mongodb.com/) (running locally on port 27017)
 
-## Installation
+## Tautan Model ML (Machine Learning Models)
+
+To run the AI features locally, you must download the pre-trained models from the Google Drive link below and place them in the `saved_models/` directory at the root of the project.
+
+- **Google Drive Link**: [Download ML Models Here](https://drive.google.com/drive/folders/1srmlzFGPbiXzEXEdMWUkrM72_FmX0qsL?usp=sharing)
+
+Ensure that the project team (`capstone@student.devacademy.id`) has access to this folder.
+
+## Setup Environment & Installation
 
 ### 1. Clone the Repository
 
@@ -113,9 +121,9 @@ npm run dev
 ```
 *The frontend will run on port 3000.*
 
-## Running the Application
+## Cara Menjalankan Aplikasi (Running the Application)
 
-Once all three services (MongoDB, FastAPI, Express) are running, open [http://localhost:3000](http://localhost:3000) in your browser.
+Once all three services (MongoDB, FastAPI, Express) are running and the ML models are placed in the `saved_models/` directory, open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Project Structure
 
@@ -153,7 +161,7 @@ arthawise/
 
 ### AI Insights (FastAPI via Node.js Proxy)
 
-- `GET /api/ai/forecast` - Get 7-day expense predictions
+- `GET /api/ai/forecast` - Get 1-day expense predictions
 - `GET /api/ai/profile` - Get dynamic financial personality profiling
 
 ## Contributing
