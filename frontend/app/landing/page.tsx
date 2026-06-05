@@ -113,6 +113,9 @@ const MagnetButton = ({ children, className = "", href }: { children: React.Reac
 import ColorBends from "@/components/ColorBends";
 import { StarBorder } from "@/components/StarBorder";
 import { TiltedCard } from "@/components/TiltedCard";
+import dynamic from "next/dynamic";
+const CardSwap = dynamic(() => import("@/components/CardSwap"), { ssr: false });
+import { Card } from "@/components/CardSwap";
 
 /* ========================================================================= */
 
@@ -315,7 +318,7 @@ export default function LandingPage() {
       {/* ═══════════════════════════════════════════════════════════════
           HERO SECTION
          ═══════════════════════════════════════════════════════════════ */}
-      <section ref={heroRef} className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-32 pb-24 z-10">
+      <section ref={heroRef} className="relative flex flex-col items-center justify-center px-6 pt-32 pb-24 z-10" style={{ minHeight: "100dvh" }}>
         <motion.div style={{ y: heroY, scale: heroScale, opacity: heroOpacity }} className="flex flex-col items-center text-center max-w-3xl mx-auto relative z-10">
 
           {/* Badge */}
@@ -505,6 +508,103 @@ export default function LandingPage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
+          CARD SWAP — WHY ARTHAWISE
+         ═══════════════════════════════════════════════════════════════ */}
+      <section className="relative z-10 py-32 px-6 border-t border-white/5 overflow-hidden">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            {/* Left: Text */}
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.7 }}
+            >
+              <SectionTag label="Kenapa ArthaWise?" />
+              <h2 className="text-4xl md:text-5xl font-black tracking-[-0.03em] leading-[1.1] mb-6">
+                <span className="text-white">Satu platform,</span><br />
+                <span className="text-white/30">semua kebutuhan.</span>
+              </h2>
+              <p className="text-[15px] leading-[1.8] text-white/40 max-w-md mb-8">
+                Dari pencatatan harian hingga prediksi AI esok hari — semuanya terintegrasi dalam satu dashboard yang elegan.
+              </p>
+              <div className="flex flex-col gap-4">
+                {[
+                  { icon: "⚡", title: "Cepat & Ringan", desc: "Interface responsif tanpa loading lama" },
+                  { icon: "🔒", title: "Aman & Privat", desc: "Data terenkripsi, hanya Anda yang bisa akses" },
+                  { icon: "📊", title: "Insight Instan", desc: "AI langsung memberikan analisis begitu data masuk" },
+                ].map((item) => (
+                  <div key={item.title} className="flex items-start gap-4 p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors cursor-default">
+                    <span className="text-xl mt-0.5">{item.icon}</span>
+                    <div>
+                      <div className="text-[14px] font-bold text-white mb-0.5">{item.title}</div>
+                      <div className="text-[13px] text-white/40">{item.desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Right: CardSwap */}
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="relative hidden md:block"
+              style={{ height: 500 }}
+            >
+              <CardSwap
+                cardDistance={50}
+                verticalDistance={60}
+                delay={4000}
+                pauseOnHover={true}
+                width={380}
+                height={260}
+              >
+                <Card className="p-6 flex flex-col justify-between">
+                  <div className="text-[#09f] text-[11px] font-bold tracking-widest uppercase mb-3">Prediksi AI</div>
+                  <div>
+                    <div className="text-2xl font-black text-white mb-1">Rp 52.400</div>
+                    <div className="text-[13px] text-white/40">Estimasi pengeluaran besok berdasarkan pola 14 hari terakhir</div>
+                  </div>
+                  <div className="flex items-center gap-2 mt-4">
+                    <div className="h-1 flex-1 rounded-full bg-white/10 overflow-hidden"><div className="h-full w-[72%] bg-[#09f] rounded-full" /></div>
+                    <span className="text-[11px] text-white/30">72% confidence</span>
+                  </div>
+                </Card>
+                <Card className="p-6 flex flex-col justify-between">
+                  <div className="text-[#22c55e] text-[11px] font-bold tracking-widest uppercase mb-3">Ringkasan Bulan Ini</div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <div className="text-[11px] text-white/40 mb-1">Pemasukan</div>
+                      <div className="text-lg font-black text-[#22c55e]">Rp 9.8jt</div>
+                    </div>
+                    <div>
+                      <div className="text-[11px] text-white/40 mb-1">Pengeluaran</div>
+                      <div className="text-lg font-black text-[#f43f5e]">Rp 5.5jt</div>
+                    </div>
+                  </div>
+                  <div className="text-[13px] text-white/40 mt-4">Anda hemat <span className="text-[#22c55e] font-bold">43%</span> bulan ini</div>
+                </Card>
+                <Card className="p-6 flex flex-col justify-between">
+                  <div className="text-[#a855f7] text-[11px] font-bold tracking-widest uppercase mb-3">Top Kategori</div>
+                  <div className="space-y-3">
+                    {[["Makanan", 42, "#09f"], ["Transport", 28, "#a855f7"], ["Hiburan", 18, "#f97316"]].map(([name, pct, clr]) => (
+                      <div key={name as string}>
+                        <div className="flex justify-between text-[12px] mb-1"><span className="text-white/60">{name}</span><span className="text-white/30">{pct}%</span></div>
+                        <div className="h-1 rounded-full bg-white/10 overflow-hidden"><div className="h-full rounded-full" style={{ width: `${pct}%`, background: clr as string }} /></div>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
+              </CardSwap>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
           HOW IT WORKS
          ═══════════════════════════════════════════════════════════════ */}
       <section id="cara-kerja" className="relative z-10 py-24 px-6 border-t border-white/5">
@@ -593,12 +693,13 @@ export default function LandingPage() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
-            <StarBorder color="#09f" speed="3s">
-              <MagnetButton href="/register"
-                className="group flex items-center gap-3 px-10 py-4 rounded-xl font-bold text-[15px] text-white cursor-pointer bg-[#09f]/10 border border-[#09f]/30 hover:bg-[#09f] hover:text-black shadow-[0_0_40px_rgba(0,153,255,0.15)] hover:shadow-[0_0_60px_rgba(0,153,255,0.3)] transition-all duration-300">
-                Buat Akun Gratis
-              </MagnetButton>
-            </StarBorder>
+            <MagnetButton href="/register"
+              className="group flex items-center gap-3 px-10 py-4 rounded-2xl font-bold text-[15px] cursor-pointer bg-[#09f] text-black hover:bg-[#09f]/90 shadow-[0_0_40px_rgba(0,153,255,0.25)] hover:shadow-[0_0_60px_rgba(0,153,255,0.4)] transition-all duration-300">
+              Buat Akun Gratis
+              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+              </svg>
+            </MagnetButton>
           </div>
         </motion.div>
       </section>
