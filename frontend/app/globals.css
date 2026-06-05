@@ -90,6 +90,16 @@ body {
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
+/* Hide number input spin buttons */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 /* ── Scrollbars ────────────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 6px;

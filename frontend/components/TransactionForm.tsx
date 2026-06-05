@@ -113,7 +113,8 @@ export default function TransactionForm({ onSuccess }: TransactionFormProps) {
                 step="1"
                 value={formData.amount || ""}
                 onChange={(e) => setFormData({ ...formData, amount: parseFloat(e.target.value) })}
-                className="vui-input w-full pl-10"
+                className="vui-input w-full"
+                style={{ paddingLeft: '2.75rem' }}
               />
             </div>
           </div>

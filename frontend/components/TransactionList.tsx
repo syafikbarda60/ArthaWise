@@ -198,7 +198,7 @@ export default function TransactionList({
                       key={page}
                       onClick={() => setCurrentPage(page)}
                       className={cn(
-                        "w-8 h-8 rounded-lg text-xs font-bold transition-colors border",
+                        "w-8 h-8 rounded-lg text-xs font-bold transition-colors border outline-none focus:outline-none",
                         currentPage === page 
                           ? "bg-brand-blue text-white border-brand-blue" 
                           : "bg-transparent text-zinc-400 border-transparent hover:bg-white/5 hover:text-white"

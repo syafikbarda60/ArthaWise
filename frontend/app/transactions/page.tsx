@@ -294,7 +294,8 @@ export default function TransactionsPage() {
                       placeholder="Cari transaksi..." 
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="vui-input py-2.5 pl-10 text-sm w-full bg-zinc-900/30 border-white/5 focus:border-brand-blue/50"
+                      className="vui-input py-2.5 text-sm w-full bg-zinc-900/30 border-white/5 focus:border-brand-blue/50"
+                      style={{ paddingLeft: '2.5rem' }}
                     />
                   </div>
                   <div className="relative">
