@@ -224,43 +224,17 @@ export default function Home() {
                     </div>
                     <span className="text-[10px] font-bold text-brand-cyan uppercase tracking-tighter px-2 py-1 bg-brand-cyan/5 rounded-md">LSTM Forecast</span>
                   </div>
-                  <h3 className="text-sm font-medium text-zinc-400 mb-1">Estimasi Pengeluaran 7 Hari</h3>
-                  <div className="text-xl font-bold text-white mb-6">
-                    {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(forecast.reduce((acc, f) => acc + f.predicted_expense, 0))}
+                  <h3 className="text-sm font-medium text-zinc-400 mb-1">Prediksi Pengeluaran Besok</h3>
+                  <div className="text-xl font-bold text-white mb-4">
+                    {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(forecast.length > 0 ? forecast[0].predicted_expense : 0)}
                   </div>
-                  
-                  {/* Sparkline bars */}
-                  {(() => {
-                    const maxVal = forecast.length > 0 ? Math.max(...forecast.map(f => f.predicted_expense)) : 1;
-                    return (
-                      <div className="flex items-end justify-between gap-1.5 h-16 relative">
-                        {forecast.length > 0 ? forecast.map((f, i) => {
-                          const heightPct = maxVal > 0 ? (f.predicted_expense / maxVal) * 100 : 10;
-                          return (
-                            <motion.div
-                              key={i}
-                              title={`${new Date(f.date).toLocaleDateString('id-ID', { weekday: 'long' })}: ${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(f.predicted_expense)}`}
-                              initial={{ height: 0 }}
-                              animate={{ height: `${Math.max(heightPct, 8)}%` }}
-                              transition={{ type: 'spring', stiffness: 100, damping: 18, delay: 0.3 + i * 0.07 }}
-                              className="flex-1 bg-brand-cyan hover:bg-cyan-400 rounded-t-md relative group cursor-pointer transition-colors"
-                            >
-                              <div className="absolute inset-0 bg-brand-cyan opacity-0 group-hover:opacity-100 transition-opacity rounded-t-md shadow-[0_0_15px_rgba(6,182,212,0.6)]" />
-                            </motion.div>
-                          );
-                        }) : (
-                          // Placeholder skeleton
-                          [25, 45, 30, 65, 40, 75, 50].map((h, i) => (
-                            <div key={i} className="flex-1 bg-zinc-800/50 rounded-t-md animate-pulse" style={{ height: `${h}%` }} />
-                          ))
-                        )}
-                      </div>
-                    );
-                  })()}
-                  <div className="flex justify-between mt-3">
-                    <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">Hari Ini</span>
-                    <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">Pekan Depan</span>
-                  </div>
+                  <p className="text-sm text-zinc-400 leading-relaxed mb-6">
+                    Berdasarkan pola transaksi, AI memprediksi nominal pengeluaran tersebut untuk besok. Lihat detail margin error (MAE) di halaman Analytics.
+                  </p>
+                  <Link href="/analytics" className="w-full py-3 bg-zinc-900/50 hover:bg-zinc-800 rounded-xl border border-white/5 text-sm font-medium transition-all flex items-center justify-center gap-2 group">
+                    Analisis Detail
+                    <ChevronRight style={{ fontSize: 16 }} className="group-hover:translate-x-1 transition-transform" />
+                  </Link>
                 </div>
               </motion.div>
             </div>
