@@ -37,11 +37,11 @@
 
 | Halaman Landing | Dashboard |
 |---|---|
-| ![Landing Page](https://via.placeholder.com/600x400?text=Insert+Landing+Page+Screenshot) | ![Dashboard](https://via.placeholder.com/600x400?text=Insert+Dashboard+Screenshot) |
+| ![Landing Page](https://placehold.co/600x400/1e293b/06b6d4?text=Upload+Screenshot+Landing) | ![Dashboard](https://placehold.co/600x400/1e293b/06b6d4?text=Upload+Screenshot+Dashboard) |
 
 | Transaksi | AI Insights |
 |---|---|
-| ![Transaksi](https://via.placeholder.com/600x400?text=Insert+Transaction+Screenshot) | ![AI Insights](https://via.placeholder.com/600x400?text=Insert+Analytics+Screenshot) |
+| ![Transaksi](https://placehold.co/600x400/1e293b/06b6d4?text=Upload+Screenshot+Transaksi) | ![AI Insights](https://placehold.co/600x400/1e293b/06b6d4?text=Upload+Screenshot+Analytics) |
 
 > **Catatan Implementasi UI/UX**: Desain di atas menggunakan pendekatan *Dark Mode* modern dengan *Glassmorphism* dan aksen *brand-cyan* untuk memberikan nuansa premium dan futuristik (Sesuai dengan target audiens generasi muda).
 
