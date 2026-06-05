@@ -216,16 +216,16 @@ export default function Home() {
                   </Link>
                 </div>
 
-                {/* Forecast Sparkline Card Highlighted */}
-                <div className="vui-card p-6 lg:p-8 border-l-4 border-l-brand-cyan shadow-[0_0_30px_rgba(6,182,212,0.15)] bg-gradient-to-br from-[#09090b] to-brand-cyan/5">
-                  <div className="flex justify-between items-start mb-8">
+                {/* Forecast Sparkline Card */}
+                <div className="vui-card p-6 border-l-4 border-l-brand-cyan">
+                  <div className="flex justify-between items-start mb-6">
                     <div className="p-3 rounded-2xl bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/20">
                       <TrendingUp style={{ fontSize: 24 }} />
                     </div>
-                    <span className="text-[10px] font-bold text-brand-cyan uppercase tracking-tighter px-2 py-1 bg-brand-cyan/5 rounded-md border border-brand-cyan/10">LSTM Forecast</span>
+                    <span className="text-[10px] font-bold text-brand-cyan uppercase tracking-tighter px-2 py-1 bg-brand-cyan/5 rounded-md">LSTM Forecast</span>
                   </div>
-                  <h3 className="text-sm font-medium text-zinc-400 mb-2">Estimasi Pengeluaran 7 Hari</h3>
-                  <div className="text-2xl lg:text-3xl font-bold text-white mb-8">
+                  <h3 className="text-sm font-medium text-zinc-400 mb-1">Estimasi Pengeluaran 7 Hari</h3>
+                  <div className="text-xl font-bold text-white mb-6">
                     {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(forecast.reduce((acc, f) => acc + f.predicted_expense, 0))}
                   </div>
                   
@@ -233,7 +233,7 @@ export default function Home() {
                   {(() => {
                     const maxVal = forecast.length > 0 ? Math.max(...forecast.map(f => f.predicted_expense)) : 1;
                     return (
-                      <div className="flex items-end justify-between gap-2 h-24 relative">
+                      <div className="flex items-end justify-between gap-1.5 h-16 relative">
                         {forecast.length > 0 ? forecast.map((f, i) => {
                           const heightPct = maxVal > 0 ? (f.predicted_expense / maxVal) * 100 : 10;
                           return (
