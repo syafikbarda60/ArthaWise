@@ -576,12 +576,12 @@ export default function LandingPage() {
               style={{ height: 500 }}
             >
               <CardSwap
-                cardDistance={60}
-                verticalDistance={70}
+                cardDistance={65}
+                verticalDistance={80}
                 delay={4000}
                 pauseOnHover={true}
-                width={460}
-                height={320}
+                width={600}
+                height={420}
               >
                 <Card className="p-6 flex flex-col justify-between">
                   <div className="text-[#09f] text-[11px] font-bold tracking-widest uppercase mb-3">Prediksi AI</div>
