@@ -216,50 +216,82 @@ export default function Home() {
                   </Link>
                 </div>
 
-                {/* Forecast Sparkline Card */}
-                <div className="vui-card p-6 border-l-4 border-l-brand-cyan">
-                  <div className="flex justify-between items-start mb-6">
-                    <div className="p-3 rounded-2xl bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/20">
-                      <TrendingUp style={{ fontSize: 24 }} />
-                    </div>
-                    <span className="text-[10px] font-bold text-brand-cyan uppercase tracking-tighter px-2 py-1 bg-brand-cyan/5 rounded-md">LSTM Forecast</span>
-                  </div>
-                  <h3 className="text-sm font-medium text-zinc-400 mb-1">Estimasi 7 Hari ke Depan</h3>
-                  <div className="text-xl font-bold text-white mb-6">
-                    {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(forecast.reduce((acc, f) => acc + f.predicted_expense, 0))}
-                  </div>
+                {/* Forecast Sparkline Card Pro Max */}
+                <div className="vui-card relative overflow-hidden group p-1">
+                  {/* Animated border gradient background */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-brand-cyan/20 via-transparent to-brand-blue/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                   
-                  {/* Sparkline bars */}
-                  {(() => {
-                    const maxVal = forecast.length > 0 ? Math.max(...forecast.map(f => f.predicted_expense)) : 1;
-                    return (
-                      <div className="flex items-end justify-between gap-1.5 h-16">
-                        {forecast.length > 0 ? forecast.map((f, i) => {
-                          const heightPct = maxVal > 0 ? (f.predicted_expense / maxVal) * 100 : 10;
-                          return (
-                            <motion.div
-                              key={i}
-                              title={new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(f.predicted_expense)}
-                              initial={{ height: 0 }}
-                              animate={{ height: `${Math.max(heightPct, 8)}%` }}
-                              transition={{ type: 'spring', stiffness: 100, damping: 18, delay: 0.3 + i * 0.07 }}
-                              className="flex-1 bg-brand-cyan/30 rounded-t-sm relative group cursor-pointer"
-                            >
-                              <div className="absolute inset-0 bg-brand-cyan opacity-0 group-hover:opacity-100 transition-opacity rounded-t-sm shadow-[0_0_10px_rgba(6,182,212,0.5)]" />
-                            </motion.div>
-                          );
-                        }) : (
-                          // Placeholder skeleton saat data belum ada
-                          [25, 45, 30, 65, 40, 75, 50].map((h, i) => (
-                            <div key={i} className="flex-1 bg-zinc-800/50 rounded-t-sm animate-pulse" style={{ height: `${h}%` }} />
-                          ))
-                        )}
+                  <div className="relative bg-[#09090b]/80 backdrop-blur-xl rounded-[22px] p-6 h-full border border-white/5">
+                    <div className="absolute top-0 right-0 p-8 text-brand-cyan/5 group-hover:text-brand-cyan/10 transition-colors duration-500 transform group-hover:scale-110 group-hover:rotate-12">
+                      <TrendingUp style={{ fontSize: 100 }} />
+                    </div>
+
+                    <div className="relative z-10">
+                      <div className="flex justify-between items-start mb-6">
+                        <div className="p-3 rounded-2xl bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/20 shadow-[0_0_15px_rgba(6,182,212,0.15)] group-hover:shadow-[0_0_25px_rgba(6,182,212,0.3)] transition-shadow">
+                          <TrendingUp style={{ fontSize: 24 }} />
+                        </div>
+                        <span className="text-[10px] font-black text-brand-cyan uppercase tracking-widest px-3 py-1.5 bg-brand-cyan/10 border border-brand-cyan/20 rounded-full shadow-[0_0_10px_rgba(6,182,212,0.1)]">LSTM AI Forecast</span>
                       </div>
-                    );
-                  })()}
-                  <div className="flex justify-between mt-2">
-                    <span className="text-[10px] text-zinc-600 font-bold uppercase">Hari Ini</span>
-                    <span className="text-[10px] text-zinc-600 font-bold uppercase">Pekan Depan</span>
+                      
+                      <h3 className="text-sm font-medium text-zinc-400 mb-1">Estimasi Pengeluaran 7 Hari</h3>
+                      <div className="text-3xl font-black mb-8 bg-clip-text text-transparent bg-gradient-to-r from-brand-cyan via-blue-400 to-brand-blue drop-shadow-sm">
+                        {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(forecast.reduce((acc, f) => acc + f.predicted_expense, 0))}
+                      </div>
+                      
+                      {/* Premium Sparkline */}
+                      {(() => {
+                        const maxVal = forecast.length > 0 ? Math.max(...forecast.map(f => f.predicted_expense)) : 1;
+                        return (
+                          <div className="mt-4">
+                            <div className="flex items-end justify-between gap-2 h-24 relative">
+                              {/* Grid lines */}
+                              <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20">
+                                <div className="w-full h-px border-t border-dashed border-zinc-600" />
+                                <div className="w-full h-px border-t border-dashed border-zinc-600" />
+                                <div className="w-full h-px border-t border-dashed border-zinc-600" />
+                              </div>
+
+                              {forecast.length > 0 ? forecast.map((f, i) => {
+                                const heightPct = maxVal > 0 ? (f.predicted_expense / maxVal) * 100 : 10;
+                                const dayName = new Date(f.date).toLocaleDateString('id-ID', { weekday: 'short' });
+                                return (
+                                  <div key={i} className="flex-1 flex flex-col items-center gap-2 group/bar cursor-pointer z-10 relative">
+                                    {/* Tooltip */}
+                                    <div className="opacity-0 group-hover/bar:opacity-100 absolute -top-8 bg-zinc-800 text-white text-[10px] font-bold px-2 py-1 rounded transition-opacity shadow-xl whitespace-nowrap pointer-events-none border border-white/10 z-20">
+                                      {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(f.predicted_expense)}
+                                    </div>
+                                    {/* Bar */}
+                                    <div className="w-full h-full flex items-end justify-center">
+                                      <motion.div
+                                        initial={{ height: 0 }}
+                                        animate={{ height: `${Math.max(heightPct, 10)}%` }}
+                                        transition={{ type: 'spring', stiffness: 100, damping: 15, delay: 0.1 + i * 0.05 }}
+                                        className="w-full max-w-[24px] bg-gradient-to-t from-brand-cyan/20 to-brand-cyan/60 rounded-t-lg relative overflow-hidden group-hover/bar:from-brand-cyan/40 group-hover/bar:to-brand-cyan border-t border-brand-cyan/50 shadow-[0_0_10px_rgba(6,182,212,0)] group-hover/bar:shadow-[0_0_15px_rgba(6,182,212,0.4)] transition-all"
+                                      >
+                                        <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent opacity-0 group-hover/bar:opacity-100 transition-opacity" />
+                                      </motion.div>
+                                    </div>
+                                    {/* Day label */}
+                                    <span className="text-[9px] font-black uppercase text-zinc-500 group-hover/bar:text-brand-cyan transition-colors">{dayName}</span>
+                                  </div>
+                                );
+                              }) : (
+                                // Placeholder skeleton
+                                [25, 45, 30, 65, 40, 75, 50].map((h, i) => (
+                                  <div key={i} className="flex-1 flex flex-col items-center gap-2 z-10">
+                                    <div className="w-full h-full flex items-end justify-center">
+                                      <div className="w-full max-w-[24px] bg-zinc-800/50 rounded-t-lg animate-pulse" style={{ height: `${h}%` }} />
+                                    </div>
+                                    <div className="w-6 h-2 bg-zinc-800/50 rounded animate-pulse" />
+                                  </div>
+                                ))
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })()}
+                    </div>
                   </div>
                 </div>
               </motion.div>

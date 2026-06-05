@@ -35,7 +35,7 @@ const getForecast = async (req, res) => {
       // Call Python FastAPI with REAL data
       const response = await axios.post(`${FASTAPI_URL}/api/ai/forecast`, {
         recent_expenses: dailyExpenses,
-        days_to_predict: 1
+        days_to_predict: 7
       });
       return res.status(200).json(response.data);
     } catch (apiError) {
@@ -44,7 +44,7 @@ const getForecast = async (req, res) => {
       // Fallback response if Python is off
       const data = [];
       const now = new Date();
-      for (let i = 1; i <= 1; i++) {
+      for (let i = 1; i <= 7; i++) {
         const nextDate = new Date(now);
         nextDate.setDate(now.getDate() + i);
         data.push({
