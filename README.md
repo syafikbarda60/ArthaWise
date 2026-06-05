@@ -31,6 +31,20 @@
 - **Responsive Design**: Mobile-first, premium dynamic UI with smooth Framer Motion animations.
 - **Type-Safe API**: TypeScript interfaces ensuring robust communication across the stack.
 
+## Dokumentasi Visual (Screenshots)
+
+*Tangkapan layar hasil pengembangan produk ArthaWise.*
+
+| Halaman Landing | Dashboard |
+|---|---|
+| ![Landing Page](https://via.placeholder.com/600x400?text=Insert+Landing+Page+Screenshot) | ![Dashboard](https://via.placeholder.com/600x400?text=Insert+Dashboard+Screenshot) |
+
+| Transaksi | AI Insights |
+|---|---|
+| ![Transaksi](https://via.placeholder.com/600x400?text=Insert+Transaction+Screenshot) | ![AI Insights](https://via.placeholder.com/600x400?text=Insert+Analytics+Screenshot) |
+
+> **Catatan Implementasi UI/UX**: Desain di atas menggunakan pendekatan *Dark Mode* modern dengan *Glassmorphism* dan aksen *brand-cyan* untuk memberikan nuansa premium dan futuristik (Sesuai dengan target audiens generasi muda).
+
 ## Tech Stack
 
 ### Frontend
