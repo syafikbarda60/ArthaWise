@@ -37,7 +37,7 @@
 
 | Halaman Landing | Dashboard |
 |---|---|
-| ![Landing Page](https://placehold.co/600x400/1e293b/06b6d4?text=Upload+Screenshot+Landing) | ![Dashboard](https://placehold.co/600x400/1e293b/06b6d4?text=Upload+Screenshot+Dashboard) |
+| ![Landing Page](https://image.thum.io/get/width/1200/crop/800/https://artha-wise-jkfn.vercel.app/) | ![Dashboard](https://placehold.co/600x400/1e293b/06b6d4?text=Upload+Screenshot+Dashboard) |
 
 | Transaksi | AI Insights |
 |---|---|
