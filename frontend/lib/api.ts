@@ -94,10 +94,14 @@ export const transactionApi = {
 };
 
 export const aiApi = {
-  getForecast: async (): Promise<ForecastDataPoint[]> => {
+  getForecast: async (): Promise<{ data: ForecastDataPoint[], confidence: number }> => {
     return withCache("cache_forecast", async () => {
       const response = await apiClient.get("/ai/forecast");
-      return response.data.data;
+      // The backend now returns { success: true, data: [...], confidence: 94.2 }
+      return { 
+        data: response.data.data || [], 
+        confidence: response.data.confidence || 85.0 
+      };
     });
   },
   

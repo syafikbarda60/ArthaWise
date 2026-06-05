@@ -40,6 +40,7 @@ const itemVariants = {
 export default function AnalyticsPage() {
   const [forecast, setForecast] = useState<ForecastDataPoint[]>([]);
   const [profile, setProfile] = useState<FinancialProfile | null>(null);
+  const [forecastConfidence, setForecastConfidence] = useState<number>(94.2);
   const [loading, setLoading] = useState(true);
 
   const router = useRouter();
@@ -54,12 +55,13 @@ export default function AnalyticsPage() {
     }
     const fetchAiData = async () => {
       try {
-        const [fData, pData] = await Promise.all([
-          aiApi.getForecast(),
-          aiApi.getFinancialProfile()
+        const [profData, forecastRes] = await Promise.all([
+          aiApi.getFinancialProfile(),
+          aiApi.getForecast()
         ]);
-        setForecast(fData);
-        setProfile(pData);
+        setProfile(profData);
+        setForecast(forecastRes.data);
+        setForecastConfidence(forecastRes.confidence);
       } catch (error) {
         console.error(error);
       } finally {
@@ -200,7 +202,7 @@ export default function AnalyticsPage() {
                     </div>
                     <div className="text-right">
                       <div className="text-xs font-bold text-zinc-500 uppercase mb-1">Confidence</div>
-                      <div className="text-lg font-black text-brand-cyan">94.2%</div>
+                      <div className="text-lg font-black text-brand-cyan">{forecastConfidence.toFixed(1)}%</div>
                     </div>
                   </div>
                   

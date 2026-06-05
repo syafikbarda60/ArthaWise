@@ -52,7 +52,7 @@ const getForecast = async (req, res) => {
           predicted_expense: 50000 + Math.random() * 80000, 
         });
       }
-      return res.status(200).json({ success: true, data });
+      return res.status(200).json({ success: true, data, confidence: 85.5 });
     }
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

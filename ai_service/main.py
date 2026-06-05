@@ -124,9 +124,20 @@ def forecast_expenses(req: ForecastRequest):
                 "predicted_expense": expense_val
             })
             
+        # Calculate heuristic confidence based on data variance
+        variance = float(np.var(history_arr)) if len(history_arr) > 0 else 0.0
+        mean_val = float(np.mean(history_arr)) if len(history_arr) > 0 else 0.0
+        
+        base_conf = 0.96
+        # Penalty increases if variance is very high compared to the mean (coefficient of variation)
+        cv = (np.sqrt(variance) / (mean_val + 1e-5)) if mean_val > 0 else 0
+        penalty = min(0.35, cv * 0.2)
+        confidence_val = float(max(0.40, base_conf - penalty)) * 100
+            
         return {
             "success": True,
-            "data": results
+            "data": results,
+            "confidence": round(confidence_val, 1)
         }
     except Exception as e:
         print(f"Forecast Error: {e}")
